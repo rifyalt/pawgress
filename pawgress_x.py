@@ -167,7 +167,7 @@ CSS = """
 html,body,[class*="css"]{font-family:var(--font)!important;background:var(--bg)!important;color:var(--navy)!important;}
 .stApp{background:var(--bg)!important;}
 #MainMenu,footer,header{visibility:hidden;}
-.block-container{padding-top:.75rem!important;padding-bottom:2rem!important;max-width:1280px!important;}
+.block-container{padding-top:.6rem!important;padding-bottom:1.5rem!important;max-width:1240px!important;}
 
 /* ── Sidebar shell ── */
 section[data-testid="stSidebar"]{background:#1a1200!important;border-right:none!important;}
@@ -218,21 +218,21 @@ section[data-testid="stSidebar"] .stButton > div{
 /* ── Button nav ── */
 section[data-testid="stSidebar"] .stButton > button{
   font-family:var(--font)!important;
-  font-size:13px!important;
+  font-size:12.5px!important;
   font-weight:400!important;
-  color:rgba(255,255,255,.5)!important;
+  color:rgba(255,255,255,.48)!important;
   background:transparent!important;
-  border:none!important;
+  border:1px solid transparent!important;
   border-radius:8px!important;
-  width:calc(100% - 16px)!important;
-  margin:1px 8px!important;
-  padding:9px 14px!important;
+  width:calc(100% - 14px)!important;
+  margin:1px 7px!important;
+  padding:8px 13px!important;
   text-align:left!important;
   justify-content:flex-start!important;
   display:flex!important;
   align-items:center!important;
   cursor:pointer!important;
-  transition:color .12s,background .12s!important;
+  transition:all .12s!important;
   letter-spacing:-.01em!important;
   line-height:1.4!important;
   box-sizing:border-box!important;
@@ -279,8 +279,8 @@ hr{border-color:var(--line)!important;}
 .stat-row{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--rl);overflow:hidden;margin-bottom:16px;}
 .stat-row-4{grid-template-columns:repeat(4,1fr);}
 .stat-row-3{grid-template-columns:repeat(3,1fr);}
-.stat-cell{background:#fff;padding:14px 16px;}
-.stat-num{font-size:24px;font-weight:600;font-family:var(--mono);letter-spacing:-.5px;line-height:1;color:var(--navy);}
+.stat-cell{background:#fff;padding:12px 14px;}
+.stat-num{font-size:22px;font-weight:600;font-family:var(--mono);letter-spacing:-.4px;line-height:1;color:var(--navy);}
 .stat-lbl{font-size:10px;color:var(--txt);margin-top:4px;text-transform:uppercase;letter-spacing:.3px;}
 .stat-sub{font-size:11px;margin-top:2px;}
 
@@ -351,11 +351,11 @@ hr{border-color:var(--line)!important;}
 .sb-xpf{height:100%;background:linear-gradient(90deg,#FFA502,#FED330);border-radius:99px;}
 
 /* ── Sidebar section label ── */
-.sb-sec{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3px;color:rgba(255,255,255,.18);padding:10px 22px 3px;}
+.sb-sec{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.3px;color:rgba(255,255,255,.18);padding:9px 20px 2px;}
 
 /* ── Page header ── */
-.pg-title{font-size:20px;font-weight:600;color:var(--navy);letter-spacing:-.4px;margin-bottom:3px;}
-.pg-sub{font-size:12px;color:var(--txt);margin-bottom:18px;}
+.pg-title{font-size:18px;font-weight:600;color:var(--navy);letter-spacing:-.3px;margin-bottom:2px;}
+.pg-sub{font-size:12px;color:var(--txt);margin-bottom:14px;}
 
 /* ── Session dots ── */
 .dot-on{width:6px;height:6px;border-radius:50%;background:var(--gdk);flex-shrink:0;}
@@ -379,20 +379,7 @@ hr{border-color:var(--line)!important;}
 .pend-row{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--line2);}
 .pend-row:last-child{border-bottom:none;}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-.cat-stage-icon.cs-active{border-color:var(--pri);background:#fff3e0;}
+.cs-active{border-color:var(--pri);background:#fff3e0;}
 .cat-stage-icon.cs-locked{filter:grayscale(1);opacity:.35;}
 
 .cat-stage-lbl.cs-cur{color:var(--pri2);}
@@ -815,87 +802,104 @@ LVL_NAME, LVL_MIN, LVL_MAX, LVL_NEXT, LVL_PCT = get_level(TOTAL_XP)
 # ══════════════════════════════════════════════════════════
 #  SIDEBAR
 with st.sidebar:
-    # Logo
+    # ── Logo ────────────────────────────────────────────────
     st.markdown("""
-    <div style="padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,.06);">
+    <div style="padding:16px 16px 12px;border-bottom:1px solid rgba(255,255,255,.07);">
       <div style="display:flex;align-items:center;gap:10px;">
-        <div style="width:34px;height:34px;background:linear-gradient(135deg,#F27127,#FFA502);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;box-shadow:0 2px 8px rgba(30,20,5,.4);">🐾</div>
+        <div style="width:32px;height:32px;background:linear-gradient(135deg,#F27127,#FFA502);
+          border-radius:9px;display:flex;align-items:center;justify-content:center;
+          font-size:15px;flex-shrink:0;">🐾</div>
         <div>
-          <div style="font-size:15px;font-weight:700;color:#fff;letter-spacing:-.3px;line-height:1.1;">PAWGRESS</div>
-          <div style="font-size:9px;color:rgba(255,255,255,.3);margin-top:3px;letter-spacing:.4px;text-transform:uppercase;">Season April</div>
+          <div style="font-size:14px;font-weight:700;color:#fff;letter-spacing:-.2px;">PAWGRESS</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.28);margin-top:2px;
+            letter-spacing:.4px;text-transform:uppercase;">Season April</div>
         </div>
       </div>
     </div>""", unsafe_allow_html=True)
 
-    # User card
-    av_col  = STAFF_COLORS.get(USER,"#1a1200")
+    # ── User card ────────────────────────────────────────────
+    av_col  = STAFF_COLORS.get(USER, "#1a1200")
     av_init = USER[:2].upper()
     ai_colors = {"Pro":"#4ade80","Balanced":"#FFA502","Slow":"#FED330","Risky":"#f87171"}
     if ROLE != "Manager":
-        ai_c  = ai_colors.get(AI_TYPE, "#60a5fa")
-        st.markdown(f"""<div class="sb-user">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-            <div class="sb-av" style="background:{av_col};">{av_init}</div>
+        ai_c = ai_colors.get(AI_TYPE, "#FFA502")
+        st.markdown(f"""
+        <div style="margin:8px 8px 2px;background:rgba(255,255,255,.05);
+          border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:11px 12px;">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
+            <div style="width:30px;height:30px;border-radius:8px;background:{av_col};
+              display:flex;align-items:center;justify-content:center;
+              font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">{av_init}</div>
             <div style="flex:1;min-width:0;">
-              <div style="font-size:13px;font-weight:600;color:#fff;line-height:1.2;">{USER}</div>
-              <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px;">{ROLE}</div>
+              <div style="font-size:12px;font-weight:600;color:#fff;line-height:1.2;">{USER}</div>
+              <div style="font-size:10px;color:rgba(255,255,255,.32);margin-top:1px;">{ROLE}</div>
             </div>
             <div style="text-align:right;flex-shrink:0;">
-              <div style="font-size:18px;font-weight:700;color:#FFA502;font-family:var(--mono);line-height:1;">{TOTAL_XP//100}</div>
-              <div style="font-size:8px;color:rgba(255,255,255,.25);letter-spacing:.3px;text-align:right;">LEVEL</div>
+              <div style="font-size:16px;font-weight:700;color:#FFA502;
+                font-family:var(--mono);line-height:1;">{_get_lvl_idx(TOTAL_XP)}</div>
+              <div style="font-size:8px;color:rgba(255,255,255,.22);letter-spacing:.3px;">LV</div>
             </div>
           </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-            <span style="font-size:10px;color:rgba(255,255,255,.35);">{LVL_NAME}</span>
-            <span style="font-size:10px;font-weight:600;padding:1px 7px;border-radius:99px;background:{ai_c}22;color:{ai_c};border:1px solid {ai_c}44;">⚡ {AI_TYPE}</span>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;">
+            <span style="font-size:10px;color:rgba(255,255,255,.32);">{LVL_NAME}</span>
+            <span style="font-size:9px;font-weight:600;padding:1px 7px;border-radius:99px;
+              background:{ai_c}20;color:{ai_c};border:1px solid {ai_c}40;">⚡ {AI_TYPE}</span>
           </div>
-          <div class="sb-xpb"><div class="sb-xpf" style="width:{LVL_PCT}%;"></div></div>
-          <div style="display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.2);font-family:var(--mono);margin-top:5px;">
+          <div style="height:3px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;">
+            <div style="height:100%;width:{LVL_PCT}%;
+              background:linear-gradient(90deg,#FFA502,#FED330);border-radius:99px;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;
+            color:rgba(255,255,255,.2);font-family:var(--mono);margin-top:4px;">
             <span>{TOTAL_XP:,} xp</span>
-            <span style="color:#FFA502;">🔥 {STREAK}d</span>
+            <span style="color:#FED330;">🔥 {STREAK}d</span>
           </div>
         </div>""", unsafe_allow_html=True)
     else:
-        st.markdown("""<div class="sb-user" style="background:rgba(255,165,2,.07);border-color:rgba(255,165,2,.15);">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:34px;height:34px;border-radius:10px;background:rgba(255,165,2,.15);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">👑</div>
+        st.markdown("""
+        <div style="margin:8px 8px 2px;background:rgba(255,165,2,.07);
+          border:1px solid rgba(255,165,2,.15);border-radius:11px;padding:11px 12px;">
+          <div style="display:flex;align-items:center;gap:9px;">
+            <div style="width:30px;height:30px;border-radius:8px;background:rgba(255,165,2,.15);
+              display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">👑</div>
             <div>
-              <div style="font-size:13px;font-weight:600;color:#fff;">Manager</div>
-              <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px;">Full Access · Admin</div>
+              <div style="font-size:12px;font-weight:600;color:#fff;">Manager</div>
+              <div style="font-size:10px;color:rgba(255,255,255,.32);margin-top:1px;">Full Access</div>
             </div>
-            <div style="margin-left:auto;font-size:9px;font-weight:700;padding:2px 8px;border-radius:99px;background:rgba(255,165,2,.15);color:#FFA502;border:1px solid rgba(255,165,2,.25);">ADMIN</div>
+            <div style="margin-left:auto;font-size:9px;font-weight:700;padding:2px 7px;
+              border-radius:99px;background:rgba(255,165,2,.15);color:#FFA502;
+              border:1px solid rgba(255,165,2,.25);">ADMIN</div>
           </div>
         </div>""", unsafe_allow_html=True)
 
-    # Navigation
+    # ── Navigation ───────────────────────────────────────────
     if ROLE == "Manager":
         st.markdown('<div class="sb-sec">Overview</div>', unsafe_allow_html=True)
-        for ico,pg in [("📊","Dashboard"),("🖥","Session Monitor")]:
+        for ico, pg in [("📊","Dashboard"),("🖥","Session Monitor")]:
             if st.button(f"{ico}  {pg}", key=f"nav_{pg}", use_container_width=True,
                          type="primary" if st.session_state.nav_page==pg else "secondary"):
                 st.session_state.nav_page=pg; st.rerun()
         st.markdown('<div class="sb-sec">Management</div>', unsafe_allow_html=True)
-        for ico,pg in [("📋","Semua Task"),("⭐","XP Control"),("📁","Kelola Project")]:
+        for ico, pg in [("📋","Semua Task"),("⭐","XP Control"),("📁","Kelola Project")]:
             if st.button(f"{ico}  {pg}", key=f"nav_{pg}", use_container_width=True,
                          type="primary" if st.session_state.nav_page==pg else "secondary"):
                 st.session_state.nav_page=pg; st.rerun()
         st.markdown('<div class="sb-sec">Analytics</div>', unsafe_allow_html=True)
-        for ico,pg in [("📈","Performa Tim"),("📝","Activity Log")]:
+        for ico, pg in [("📈","Performa Tim"),("📝","Activity Log")]:
             if st.button(f"{ico}  {pg}", key=f"nav_{pg}", use_container_width=True,
                          type="primary" if st.session_state.nav_page==pg else "secondary"):
                 st.session_state.nav_page=pg; st.rerun()
     else:
         st.markdown('<div class="sb-sec">Workspace</div>', unsafe_allow_html=True)
-        for ico,pg in [("📋","My Tasks"),("✅","QC Antrian"),("🔍","Status QC Saya")]:
+        for ico, pg in [("📋","My Tasks"),("✅","QC Antrian"),("🔍","Status QC Saya")]:
             if st.button(f"{ico}  {pg}", key=f"nav_{pg}", use_container_width=True,
                          type="primary" if st.session_state.nav_page==pg else "secondary"):
                 st.session_state.nav_page=pg; st.rerun()
         st.markdown('<div class="sb-sec">Game</div>', unsafe_allow_html=True)
-        for ico,pg in [("🏆","Leaderboard"),("⭐","Quest & Streak")]:
+        for ico, pg in [("🏆","Leaderboard"),("⭐","Quest & Streak")]:
             if st.button(f"{ico}  {pg}", key=f"nav_{pg}", use_container_width=True,
                          type="primary" if st.session_state.nav_page==pg else "secondary"):
                 st.session_state.nav_page=pg; st.rerun()
-
     # Logout
     st.markdown('<hr>', unsafe_allow_html=True)
     if st.button("🚪  Logout", use_container_width=True, key="btn_logout"):
@@ -1342,131 +1346,7 @@ def page_quest_streak():
         cur_lv > _get_lvl_idx(int(prev_xp))
     )
 
-    # ── Cat SVG lookup ─────────────────────────────────────────
-    CAT_SVGS = {
-        0: """<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="50" cy="54" rx="30" ry="26" fill="#e8d5b7"/>
-          <polygon points="28,36 20,18 38,32" fill="#d4b896"/>
-          <polygon points="72,36 80,18 62,32" fill="#d4b896"/>
-          <ellipse cx="42" cy="50" rx="4" ry="5" fill="#1a1200"/>
-          <ellipse cx="58" cy="50" rx="4" ry="5" fill="#1a1200"/>
-          <circle cx="50" cy="57" r="3" fill="#1a1200"/>
-          <line x1="40" y1="61" x2="22" y2="58" stroke="#1a1200" stroke-width="1.5"/>
-          <line x1="60" y1="61" x2="78" y2="58" stroke="#1a1200" stroke-width="1.5"/>
-          <ellipse cx="50" cy="78" rx="8" ry="14" fill="#d4b896"/>
-        </svg>""",
-        1: """<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="50" cy="54" rx="30" ry="26" fill="#f4a35a"/>
-          <polygon points="28,36 22,16 40,32" fill="#e8924a"/>
-          <polygon points="72,36 78,16 60,32" fill="#e8924a"/>
-          <ellipse cx="42" cy="50" rx="4.5" ry="5.5" fill="#1a1200" transform="rotate(-8,42,50)"/>
-          <ellipse cx="58" cy="50" rx="4.5" ry="5.5" fill="#1a1200" transform="rotate(8,58,50)"/>
-          <circle cx="50" cy="57" r="3" fill="#1a1200"/>
-          <line x1="40" y1="61" x2="20" y2="56" stroke="#1a1200" stroke-width="1.5"/>
-          <line x1="40" y1="64" x2="22" y2="68" stroke="#1a1200" stroke-width="1.5"/>
-          <line x1="60" y1="61" x2="80" y2="56" stroke="#1a1200" stroke-width="1.5"/>
-          <line x1="60" y1="64" x2="78" y2="68" stroke="#1a1200" stroke-width="1.5"/>
-          <path d="M44,72 Q50,82 56,72" fill="#e8924a"/>
-        </svg>""",
-        2: """<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="50" cy="53" rx="32" ry="27" fill="#FFA502"/>
-          <polygon points="28,34 18,12 40,30" fill="#F27127"/>
-          <polygon points="72,34 82,12 60,30" fill="#F27127"/>
-          <ellipse cx="50" cy="54" rx="18" ry="15" fill="#FFF3E0"/>
-          <ellipse cx="42" cy="49" rx="5" ry="6" fill="#1a1200" transform="rotate(-11,42,49)"/>
-          <ellipse cx="58" cy="49" rx="5" ry="6" fill="#1a1200" transform="rotate(11,58,49)"/>
-          <circle cx="50" cy="57" r="3.2" fill="#1a1200"/>
-          <line x1="40" y1="62" x2="20" y2="56" stroke="#F27127" stroke-width="2"/>
-          <line x1="40" y1="66" x2="22" y2="70" stroke="#F27127" stroke-width="2"/>
-          <line x1="60" y1="62" x2="80" y2="56" stroke="#F27127" stroke-width="2"/>
-          <line x1="60" y1="66" x2="78" y2="70" stroke="#F27127" stroke-width="2"/>
-          <path d="M44,73 Q50,84 56,73" fill="#F27127"/>
-        </svg>""",
-        3: """<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="50" cy="52" rx="33" ry="28" fill="#e07b3a"/>
-          <polygon points="26,32 16,10 40,28" fill="#c05a10"/>
-          <polygon points="74,32 84,10 60,28" fill="#c05a10"/>
-          <line x1="40" y1="24" x2="46" y2="46" stroke="#c05a10" stroke-width="1.5"/>
-          <line x1="47" y1="22" x2="51" y2="44" stroke="#c05a10" stroke-width="1.5"/>
-          <line x1="54" y1="22" x2="50" y2="44" stroke="#c05a10" stroke-width="1.5"/>
-          <line x1="61" y1="24" x2="55" y2="46" stroke="#c05a10" stroke-width="1.5"/>
-          <ellipse cx="50" cy="53" rx="20" ry="16" fill="#FFF0E0"/>
-          <ellipse cx="42" cy="48" rx="5.2" ry="6.5" fill="#1a1200" transform="rotate(-14,42,48)"/>
-          <ellipse cx="58" cy="48" rx="5.2" ry="6.5" fill="#1a1200" transform="rotate(14,58,48)"/>
-          <circle cx="50" cy="57" r="3.3" fill="#1a1200"/>
-          <line x1="40" y1="63" x2="18" y2="56" stroke="#c05a10" stroke-width="2"/>
-          <line x1="40" y1="67" x2="20" y2="72" stroke="#c05a10" stroke-width="2"/>
-          <line x1="60" y1="63" x2="82" y2="56" stroke="#c05a10" stroke-width="2"/>
-          <line x1="60" y1="67" x2="80" y2="72" stroke="#c05a10" stroke-width="2"/>
-          <path d="M44,74 Q50,86 56,74" fill="#c05a10"/>
-        </svg>""",
-        4: """<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="50" cy="51" rx="34" ry="29" fill="#8B4513"/>
-          <polygon points="24,30 14,8 40,26" fill="#6B3010"/>
-          <polygon points="76,30 86,8 60,26" fill="#6B3010"/>
-          <line x1="35" y1="18" x2="38" y2="44" stroke="#6B3010" stroke-width="1.8"/>
-          <line x1="43" y1="16" x2="45" y2="44" stroke="#6B3010" stroke-width="1.8"/>
-          <line x1="50" y1="16" x2="50" y2="44" stroke="#6B3010" stroke-width="1.8"/>
-          <line x1="57" y1="16" x2="55" y2="44" stroke="#6B3010" stroke-width="1.8"/>
-          <line x1="65" y1="18" x2="62" y2="44" stroke="#6B3010" stroke-width="1.8"/>
-          <ellipse cx="50" cy="53" rx="21" ry="17" fill="#D2691E"/>
-          <ellipse cx="42" cy="47" rx="5.5" ry="7" fill="#1a0a00" transform="rotate(-17,42,47)"/>
-          <ellipse cx="58" cy="47" rx="5.5" ry="7" fill="#1a0a00" transform="rotate(17,58,47)"/>
-          <circle cx="50" cy="57" r="3.5" fill="#1a0a00"/>
-          <line x1="40" y1="64" x2="16" y2="57" stroke="#6B3010" stroke-width="2.2"/>
-          <line x1="40" y1="69" x2="18" y2="75" stroke="#6B3010" stroke-width="2.2"/>
-          <line x1="60" y1="64" x2="84" y2="57" stroke="#6B3010" stroke-width="2.2"/>
-          <line x1="60" y1="69" x2="82" y2="75" stroke="#6B3010" stroke-width="2.2"/>
-          <path d="M44,76 Q50,88 56,76" fill="#6B3010"/>
-        </svg>""",
-        5: """<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="50" cy="50" rx="36" ry="31" fill="#C8860A"/>
-          <rect x="28" y="14" width="8" height="30" rx="4" fill="#8B5E00"/>
-          <rect x="37" y="12" width="8" height="30" rx="4" fill="#C8860A"/>
-          <rect x="46" y="12" width="8" height="30" rx="4" fill="#8B5E00"/>
-          <rect x="55" y="12" width="8" height="30" rx="4" fill="#C8860A"/>
-          <rect x="64" y="14" width="8" height="30" rx="4" fill="#8B5E00"/>
-          <polygon points="22,28 12,6 38,24" fill="#8B5E00"/>
-          <polygon points="78,28 88,6 62,24" fill="#8B5E00"/>
-          <ellipse cx="50" cy="52" rx="22" ry="19" fill="#FFE4A0"/>
-          <ellipse cx="42" cy="46" rx="6" ry="7.5" fill="#FFA502" transform="rotate(-17,42,46)"/>
-          <ellipse cx="42" cy="46" rx="3" ry="6" fill="#1a0a00" transform="rotate(-17,42,46)"/>
-          <ellipse cx="58" cy="46" rx="6" ry="7.5" fill="#FFA502" transform="rotate(17,58,46)"/>
-          <ellipse cx="58" cy="46" rx="3" ry="6" fill="#1a0a00" transform="rotate(17,58,46)"/>
-          <circle cx="50" cy="57" r="3.8" fill="#1a0a00"/>
-          <line x1="40" y1="65" x2="14" y2="58" stroke="#8B5E00" stroke-width="2.5"/>
-          <line x1="40" y1="70" x2="16" y2="77" stroke="#8B5E00" stroke-width="2.5"/>
-          <line x1="60" y1="65" x2="86" y2="58" stroke="#8B5E00" stroke-width="2.5"/>
-          <line x1="60" y1="70" x2="84" y2="77" stroke="#8B5E00" stroke-width="2.5"/>
-          <path d="M44,78 Q50,92 56,78" fill="#8B5E00"/>
-        </svg>""",
-        6: """<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="50" cy="50" rx="38" ry="33" fill="#FED330"/>
-          <ellipse cx="50" cy="18" rx="6" ry="11" fill="#FFA502" transform="rotate(0,50,18)"/>
-          <ellipse cx="67" cy="23" rx="6" ry="11" fill="#FED330" transform="rotate(45,67,23)"/>
-          <ellipse cx="78" cy="38" rx="6" ry="11" fill="#FFA502" transform="rotate(90,78,38)"/>
-          <ellipse cx="78" cy="56" rx="6" ry="11" fill="#FED330" transform="rotate(135,78,56)"/>
-          <ellipse cx="33" cy="23" rx="6" ry="11" fill="#FED330" transform="rotate(-45,33,23)"/>
-          <ellipse cx="22" cy="38" rx="6" ry="11" fill="#FFA502" transform="rotate(-90,22,38)"/>
-          <ellipse cx="22" cy="56" rx="6" ry="11" fill="#FED330" transform="rotate(-135,22,56)"/>
-          <polygon points="22,24 12,2 38,20" fill="#FFA502"/>
-          <polygon points="78,24 88,2 62,20" fill="#FFA502"/>
-          <polygon points="38,10 42,20 50,14 58,20 62,10 50,4" fill="#FFA502" stroke="#F27127" stroke-width="1"/>
-          <ellipse cx="50" cy="52" rx="24" ry="20" fill="#FFFDE0"/>
-          <ellipse cx="42" cy="45" rx="6.5" ry="8" fill="#FFA502" transform="rotate(-17,42,45)"/>
-          <ellipse cx="42" cy="45" rx="3.2" ry="6.5" fill="#1a0a00" transform="rotate(-17,42,45)"/>
-          <ellipse cx="58" cy="45" rx="6.5" ry="8" fill="#FFA502" transform="rotate(17,58,45)"/>
-          <ellipse cx="58" cy="45" rx="3.2" ry="6.5" fill="#1a0a00" transform="rotate(17,58,45)"/>
-          <circle cx="50" cy="57" r="4" fill="#1a0a00"/>
-          <line x1="40" y1="66" x2="12" y2="58" stroke="#F27127" stroke-width="2.5"/>
-          <line x1="40" y1="72" x2="14" y2="80" stroke="#F27127" stroke-width="2.5"/>
-          <line x1="60" y1="66" x2="88" y2="58" stroke="#F27127" stroke-width="2.5"/>
-          <line x1="60" y1="72" x2="86" y2="80" stroke="#F27127" stroke-width="2.5"/>
-          <path d="M44,80 Q50,95 56,80" fill="#F27127"/>
-        </svg>""",
-    }
-
-    # Get current level index
+    # Get current level index    # Get current level index
     cur_idx = _get_lvl_idx(TOTAL_XP)
     lv = LEVELS[cur_idx]
     lv_emoji = lv[1].split()[0]
@@ -1474,101 +1354,6 @@ def page_quest_streak():
     nxt_xp   = LEVELS[cur_idx+1][0] if cur_idx+1 < len(LEVELS) else 9999
     nxt_name = " ".join(LEVELS[cur_idx+1][1].split()[1:]) if cur_idx+1 < len(LEVELS) else "MAX"
     pct      = LVL_PCT
-    cat_svg  = CAT_SVGS.get(cur_idx, CAT_SVGS[0])
-
-    # Level-up banner
-    if leveled_up:
-        st.markdown(f"""
-        <div style="background:#1a1200;border-radius:14px;padding:24px 20px;text-align:center;
-          margin-bottom:12px;border:1px solid rgba(255,165,2,.25);position:relative;overflow:hidden;">
-          <div style="font-size:9px;font-weight:700;letter-spacing:1.3px;color:rgba(255,165,2,.5);
-            text-transform:uppercase;margin-bottom:8px;">Level Up!</div>
-          <div style="font-size:56px;line-height:1;margin-bottom:8px;">{lv_emoji}</div>
-          <div style="font-size:22px;font-weight:700;color:#FFA502;margin-bottom:3px;">{lv_emoji} {lv_name}</div>
-          <div style="font-size:12px;color:rgba(255,255,255,.35);">Level {cur_idx} Unlocked</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    # ── Cat Hero Card ─────────────────────────────────────────
-    # Render cat + info sebagai 2 kolom Streamlit (bukan nested div)
-    col_cat, col_info = st.columns([1, 1.6])
-
-    with col_cat:
-        st.markdown(f"""
-        <div style="background:#1a1200;border-radius:14px;padding:22px 16px 18px;
-          text-align:center;height:100%;min-height:280px;
-          display:flex;flex-direction:column;align-items:center;justify-content:center;">
-          <div style="display:inline-flex;align-items:center;justify-content:center;
-            width:140px;height:140px;border-radius:50%;
-            border:2px solid rgba(255,165,2,.25);
-            outline:8px solid rgba(26,18,0,1);
-            outline-offset:-8px;
-            margin-bottom:14px;">
-            {cat_svg}
-          </div>
-          <div style="display:inline-block;background:#FFA502;color:#1a1200;
-            font-size:10px;font-weight:700;padding:2px 10px;border-radius:99px;
-            margin-bottom:10px;">Lv {cur_idx} &middot; {lv_name}</div>
-          <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:3px;">
-            {lv_emoji} {lv_name}</div>
-          <div style="font-size:11px;color:rgba(255,255,255,.32);line-height:1.5;">
-            Evolusi kucing kamu</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with col_info:
-        st.markdown(f"""
-        <div style="background:#1a1200;border-radius:14px;padding:22px 20px;
-          min-height:280px;display:flex;flex-direction:column;justify-content:space-between;">
-          <div>
-            <div style="font-size:10px;font-weight:600;color:rgba(255,255,255,.25);
-              text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;">Total XP</div>
-            <div style="font-size:38px;font-weight:700;font-family:var(--mono);
-              color:#FFA502;line-height:1;">{TOTAL_XP:,}</div>
-            <div style="font-size:11px;color:rgba(255,255,255,.28);margin-top:4px;
-              font-family:var(--mono);">dari {nxt_xp:,} XP &rarr; {nxt_name}</div>
-            <div style="height:5px;background:rgba(255,255,255,.08);border-radius:99px;
-              overflow:hidden;margin:10px 0 4px;">
-              <div style="height:100%;width:{pct}%;
-                background:linear-gradient(90deg,#FFA502,#FED330);border-radius:99px;"></div>
-            </div>
-            <div style="display:flex;justify-content:space-between;font-size:10px;
-              color:rgba(255,255,255,.2);font-family:var(--mono);">
-              <span>{pct}%</span><span>target {nxt_xp:,} XP</span>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;">
-            <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
-              border-radius:9px;padding:10px 12px;">
-              <div style="font-size:20px;font-weight:700;font-family:var(--mono);
-                color:#FFA502;line-height:1;">{cur_idx}</div>
-              <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:3px;
-                text-transform:uppercase;letter-spacing:.3px;">Level</div>
-            </div>
-            <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
-              border-radius:9px;padding:10px 12px;">
-              <div style="font-size:20px;font-weight:700;font-family:var(--mono);
-                color:#FED330;line-height:1;">{STREAK}</div>
-              <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:3px;
-                text-transform:uppercase;letter-spacing:.3px;">Streak hari</div>
-            </div>
-            <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
-              border-radius:9px;padding:10px 12px;">
-              <div style="font-size:20px;font-weight:700;font-family:var(--mono);
-                color:#4ade80;line-height:1;">{DONE_TODAY}</div>
-              <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:3px;
-                text-transform:uppercase;letter-spacing:.3px;">Task selesai</div>
-            </div>
-            <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
-              border-radius:9px;padding:10px 12px;">
-              <div style="font-size:20px;font-weight:700;font-family:var(--mono);
-                color:#FFA502;line-height:1;">{COIN_TOT}</div>
-              <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:3px;
-                text-transform:uppercase;letter-spacing:.3px;">Coin</div>
-            </div>
-          </div>
-        </div>
-        """, unsafe_allow_html=True)
 
     # ── Level Path ────────────────────────────────────────────
     path_nodes = ""
