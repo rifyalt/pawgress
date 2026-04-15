@@ -102,22 +102,19 @@ PROJECT_HEADERS = ["Project ID","Name","Category","Deadline","Staff","Target XP"
                    "Progress","Status","Created"]
 XP_LOG_HEADERS  = ["Timestamp","Staff","Type","Amount","Reason","Applied By"]
 
-# ── Weekend & Holiday Bonus Config ────────────────────────
-# Bonus XP + Coin flat per task yang dikerjakan di hari libur
+# ── Weekend & Holiday Bonus ────────────────────────────
 HOLIDAY_BONUS = {
-    "saturday": {"xp": 15, "coin": 5,  "label": "Sabtu",        "color": "#F27127"},
-    "sunday":   {"xp": 20, "coin": 8,  "label": "Minggu",       "color": "#d97706"},
-    "holiday":  {"xp": 25, "coin": 10, "label": "Tanggal Merah","color": "#dc2626"},
-    # Sabtu yang juga tanggal merah → gabung saturday + holiday
+    "saturday": {"xp":15,"coin":5, "label":"Sabtu",        "color":"#F27127"},
+    "sunday":   {"xp":20,"coin":8, "label":"Minggu",       "color":"#d97706"},
+    "holiday":  {"xp":25,"coin":10,"label":"Tanggal Merah","color":"#dc2626"},
 }
-
-# Tanggal merah Indonesia 2026 (hardcoded, bisa diperpanjang)
 HOLIDAYS_2026 = {
-    "2026-01-01","2026-01-27","2026-01-28","2026-01-29","2026-01-30","2026-02-18",
-    "2026-03-20","2026-03-28","2026-03-30","2026-03-31","2026-04-01","2026-04-02",
-    "2026-04-03","2026-05-01","2026-05-14","2026-05-24","2026-05-29","2026-06-01",
-    "2026-06-10","2026-07-16","2026-08-17","2026-08-20","2026-09-10","2026-09-11",
-    "2026-10-01","2026-11-11","2026-12-24","2026-12-25",
+    "2026-01-01","2026-01-27","2026-01-28","2026-01-29","2026-01-30",
+    "2026-02-18","2026-03-20","2026-03-28","2026-03-30","2026-03-31",
+    "2026-04-01","2026-04-02","2026-04-03","2026-05-01","2026-05-14",
+    "2026-05-24","2026-05-29","2026-06-01","2026-06-10","2026-07-16",
+    "2026-08-17","2026-08-20","2026-09-10","2026-09-11","2026-10-01",
+    "2026-11-11","2026-12-24","2026-12-25",
 }
 
 # ── Column index map (0-based untuk pandas, 1-based untuk gspread) ──
@@ -430,83 +427,50 @@ def _get_lvl_idx(xp):
     return cur
 
 def get_holiday_type(date_str):
-    """
-    Cek tipe hari untuk date_str (YYYY-MM-DD).
-    Return: 'holiday' | 'sunday' | 'saturday' | None
-    Priority: holiday > sunday > saturday
-    """
+    """Return 'holiday'|'sunday'|'saturday'|None untuk date_str YYYY-MM-DD."""
     try:
-        from datetime import date as _date
-        d = _date.fromisoformat(str(date_str)[:10])
-        is_red    = str(date_str)[:10] in HOLIDAYS_2026
-        is_sunday = d.weekday() == 6
-        is_saturday = d.weekday() == 5
-        if is_red:     return "holiday"
-        if is_sunday:  return "sunday"
-        if is_saturday: return "saturday"
-        return None
-    except Exception:
-        return None
+        from datetime import date as _d
+        d = _d.fromisoformat(str(date_str)[:10])
+        if str(date_str)[:10] in HOLIDAYS_2026: return "holiday"
+        if d.weekday() == 6: return "sunday"
+        if d.weekday() == 5: return "saturday"
+    except Exception: pass
+    return None
 
 def calc_holiday_bonus(date_str):
-    """Return bonus dict {xp, coin, label, color} or None jika bukan hari libur."""
-    htype = get_holiday_type(date_str)
-    if not htype: return None
-    return HOLIDAY_BONUS.get(htype)
+    """Return bonus dict atau None jika bukan hari libur."""
+    t = get_holiday_type(date_str)
+    return HOLIDAY_BONUS.get(t) if t else None
 
-def get_pending_holiday_allowance(xplog_df, task_df, staff=None):
-    """
-    Kembalikan list dict weekend allowance yang belum diapprove (Applied By == 'PENDING').
-    Filter per staff jika diberikan.
-    """
+def get_pending_holiday_allowance(xplog_df):
+    """Ambil list Weekend Allowance yang Applied By == PENDING."""
     if xplog_df.empty or "Type" not in xplog_df.columns: return []
-    mask = xplog_df["Type"] == "Weekend Allowance"
+    df = xplog_df[(xplog_df["Type"]=="Weekend Allowance") &
+                  (xplog_df.get("Applied By", "").astype(str)=="PENDING" if "Applied By" in xplog_df.columns
+                   else True)].copy()
     if "Applied By" in xplog_df.columns:
-        mask = mask & (xplog_df["Applied By"] == "PENDING")
-    df = xplog_df[mask].copy()
-    if staff: df = df[df["Staff"] == staff]
-    result = []
-    for _, row in df.iterrows():
-        result.append({
-            "timestamp": str(row.get("Timestamp","")),
-            "staff":     str(row.get("Staff","")),
-            "amount":    int(float(str(row.get("Amount",0) or 0))),
-            "reason":    str(row.get("Reason","")),
-        })
-    return result
+        df = xplog_df[(xplog_df["Type"]=="Weekend Allowance") &
+                      (xplog_df["Applied By"].astype(str)=="PENDING")]
+    return [{"ts":str(r.get("Timestamp","")), "staff":str(r.get("Staff","")),
+             "amount":int(float(str(r.get("Amount",0) or 0))),
+             "reason":str(r.get("Reason",""))} for _,r in df.iterrows()]
 
-def get_weekend_summary_this_week(xplog_df, task_df):
-    """
-    Ringkasan weekend aktif minggu ini per staff:
-    {staff: {saturday_xp, sunday_xp, holiday_xp, total_bonus, status}}
-    """
+def get_weekend_summary(task_df):
+    """Ringkasan bonus weekend per staff dari task Done."""
     from datetime import date, timedelta
-    today = now_jkt().date()
-    # Cari Sabtu & Minggu minggu ini
-    week_start = today - timedelta(days=today.weekday())  # Senin
-    saturday   = week_start + timedelta(days=5)
-    sunday     = week_start + timedelta(days=6)
-
     summary = {}
-    if task_df.empty or "Date" not in task_df.columns: return summary
-
-    done_df = task_df[task_df["Status"] == "Done"].copy() if "Status" in task_df.columns else pd.DataFrame()
-    if done_df.empty: return summary
-
-    for _, row in done_df.iterrows():
-        d_str = str(row.get("Date", ""))[:10]
-        sn    = str(row.get("Staff", ""))
-        xp    = int(float(str(row.get("XP", 0) or 0)))
-        htype = get_holiday_type(d_str)
-        if not htype: continue
-        bonus = HOLIDAY_BONUS.get(htype, {})
-        if sn not in summary:
-            summary[sn] = {"saturday_xp":0,"sunday_xp":0,"holiday_xp":0,"total_tasks":0,"total_bonus":0}
-        summary[sn]["total_tasks"] += 1
-        summary[sn]["total_bonus"] += bonus.get("xp", 0)
-        if htype == "saturday": summary[sn]["saturday_xp"] += bonus.get("xp",0)
-        elif htype == "sunday": summary[sn]["sunday_xp"]   += bonus.get("xp",0)
-        elif htype == "holiday": summary[sn]["holiday_xp"] += bonus.get("xp",0)
+    if task_df.empty or "Date" not in task_df.columns or "Status" not in task_df.columns:
+        return summary
+    done = task_df[task_df["Status"]=="Done"]
+    for _, row in done.iterrows():
+        d = str(row.get("Date",""))[:10]
+        sn = str(row.get("Staff",""))
+        ht = get_holiday_type(d)
+        if not ht: continue
+        b = HOLIDAY_BONUS.get(ht,{})
+        if sn not in summary: summary[sn]={"tasks":0,"bonus_xp":0}
+        summary[sn]["tasks"]    += 1
+        summary[sn]["bonus_xp"] += b.get("xp",0)
     return summary
 
 
@@ -1061,37 +1025,29 @@ def page_my_tasks():
         my_df = my_df.sort_values("Timestamp", ascending=False)
 
     # ── Weekend / Holiday Banner ────────────────────────────
-    today_htype  = get_holiday_type(TODAY)
-    today_hbonus = HOLIDAY_BONUS.get(today_htype) if today_htype else None
-    if today_hbonus:
-        h_label = today_hbonus["label"]
-        h_xp    = today_hbonus["xp"]
-        h_coin  = today_hbonus["coin"]
-        h_color = today_hbonus["color"]
-        # Cek apakah sudah ada allowance hari ini di XP Log
-        already_today = False
-        if not xplog_df.empty and "Type" in xplog_df.columns and "Staff" in xplog_df.columns:
-            already_today = not xplog_df[
-                (xplog_df["Type"]=="Weekend Allowance") &
-                (xplog_df["Staff"]==USER) &
-                (xplog_df["Timestamp"].astype(str).str.startswith(TODAY))
-            ].empty
-        status_txt = "✓ Sudah tercatat, menunggu approval Manager" if already_today else f"Kerjakan task hari ini → dapat +{h_xp} XP per task"
+    _hbonus_today = calc_holiday_bonus(TODAY)
+    if _hbonus_today:
+        _already = (not xplog_df.empty and "Type" in xplog_df.columns and
+                    "Staff" in xplog_df.columns and "Applied By" in xplog_df.columns and
+                    not xplog_df[(xplog_df["Type"]=="Weekend Allowance") &
+                                 (xplog_df["Staff"]==USER) &
+                                 (xplog_df["Timestamp"].astype(str).str.startswith(TODAY))].empty)
+        _hstatus = "✓ Sudah tercatat — menunggu approval Manager" if _already else f"Kerjakan task hari ini → +{_hbonus_today['xp']} XP per task · Perlu approval Manager"
         st.markdown(f"""
-        <div style="background:#1a1200;border:1px solid {h_color}44;border-radius:12px;
+        <div style="background:#1a1200;border:1px solid {_hbonus_today['color']}44;border-radius:12px;
           padding:13px 16px;margin-bottom:12px;display:flex;align-items:center;gap:14px;">
-          <div style="width:42px;height:42px;border-radius:10px;background:{h_color}22;
-            display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🎁</div>
+          <div style="width:42px;height:42px;border-radius:10px;background:{_hbonus_today['color']}20;
+            display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🎁</div>
           <div style="flex:1;">
             <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;">
-              {h_label} Allowance Aktif</div>
-            <div style="font-size:11px;color:rgba(255,255,255,.4);">{status_txt}</div>
+              {_hbonus_today['label']} Allowance Aktif</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.4);">{_hstatus}</div>
           </div>
           <div style="text-align:right;flex-shrink:0;">
-            <div style="font-size:20px;font-weight:700;font-family:var(--mono);color:{h_color};
-              line-height:1;">+{h_xp} XP</div>
+            <div style="font-size:20px;font-weight:700;font-family:var(--mono);
+              color:{_hbonus_today['color']};line-height:1;">+{_hbonus_today['xp']} XP</div>
             <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px;">
-              +{h_coin} Coin / task</div>
+              +{_hbonus_today['coin']} Coin / task</div>
           </div>
         </div>
         """, unsafe_allow_html=True)
@@ -1107,22 +1063,21 @@ def page_my_tasks():
         notes_r     = str(row.get("Notes",""))
         ts_r        = str(row.get("Timestamp",""))
         xp_r        = _safe_int(row.get("XP",0))
+        # Weekend badge per task
+        _task_date  = str(row.get("Date", TODAY))
+        _task_hb    = calc_holiday_bonus(_task_date)
+        _wa_badge   = (f' <span style="font-size:9px;font-weight:700;padding:1px 7px;'
+                       f'border-radius:99px;background:{_task_hb["color"]}18;'
+                       f'color:{_task_hb["color"]};border:1px solid {_task_hb["color"]}33;">'
+                       f'🎁 {_task_hb["label"]} +{_task_hb["xp"]} XP</span>'
+                      ) if _task_hb else ""
         coin_r      = _safe_int(row.get("Coin",0))
         is_done     = status_r.lower()=="done"
-        # Weekend/holiday badge
-        task_date_r  = str(row.get("Date", TODAY))
-        task_htype   = get_holiday_type(task_date_r)
-        task_hbonus  = HOLIDAY_BONUS.get(task_htype) if task_htype else None
-        weekend_badge= (f'<span style="font-size:9px;font-weight:700;padding:1px 7px;border-radius:99px;'
-                        f'background:{task_hbonus["color"]}22;color:{task_hbonus["color"]};'
-                        f'border:1px solid {task_hbonus["color"]}44;">🎁 {task_hbonus["label"]}</span>'
-                       ) if task_hbonus else ""
         cfg_r       = SLA_CONFIG.get(task_type_r,{})
         sla_i       = sla_info(task_type_r, ts_r, status_r)
         ico         = "✅" if is_done else "🔄" if "progress" in status_r.lower() else "⏳"
 
-        exp_title = f"{ico} {task_type_r} — {hotel_r or client_r}  ·  {ref_id}" + (" 🎁" if task_hbonus else "")
-        with st.expander(exp_title):
+        with st.expander(f"{ico} {task_type_r} — {hotel_r or client_r}  ·  {ref_id}"):
             left_col, right_col = st.columns([3,2])
 
             with left_col:
@@ -1170,24 +1125,15 @@ def page_my_tasks():
                         if ok:
                             load_data.clear()
                             if btn_done or (final_status=="Done" and not is_done):
-                                # Cek Weekend/Holiday bonus
-                                task_date = str(row.get("Date", TODAY))
-                                h_bonus   = calc_holiday_bonus(task_date)
-                                if h_bonus:
-                                    htype    = get_holiday_type(task_date)
-                                    h_label  = h_bonus["label"]
-                                    h_xp     = h_bonus["xp"]
-                                    h_coin   = h_bonus["coin"]
-                                    reason   = f"{h_label} Allowance — {ref_id} ({new_type})"
-                                    # Catat di XP Log dengan status PENDING (perlu approval manager)
-                                    ws_append("XP Log", [
-                                        now_str(), USER, "Weekend Allowance",
-                                        h_xp, reason, "PENDING"
-                                    ])
+                                _hb = calc_holiday_bonus(str(row.get("Date", TODAY)))
+                                if _hb:
+                                    ws_append("XP Log",[now_str(),USER,"Weekend Allowance",
+                                        _hb["xp"],
+                                        f"{_hb['label']} Allowance — {ref_id} ({new_type})",
+                                        "PENDING"])
                                     st.session_state.toast_msg = (
-                                        f"🎉 Done! **+{xp_new} XP** dan **+{coin_new} Coin** masuk. "
-                                        f"🎁 **+{h_xp} XP {h_label} Allowance** menunggu approval Manager."
-                                    )
+                                        f"🎉 Done! **+{xp_new} XP** +{coin_new} Coin. "
+                                        f"🎁 **+{_hb['xp']} XP {_hb['label']} Allowance** menunggu approval Manager.")
                                 else:
                                     st.session_state.toast_msg = f"🎉 Done! **+{xp_new} XP** dan **+{coin_new} Coin** masuk."
                             else:
@@ -1930,157 +1876,139 @@ def page_semua_task():
 
 def page_xp_control():
     # ── Stat strip ──────────────────────────────────────────
-    pending_task = task_df[(task_df["Status"]=="Done")&(task_df["QC Status"]=="Pending QC")] if not task_df.empty and "QC Status" in task_df.columns else []
-    wa_pending   = get_pending_holiday_allowance(xplog_df, task_df)
-    n_task_pend  = len(pending_task) if hasattr(pending_task,"__len__") else 0
-    n_wa_pend    = len(wa_pending)
+    wa_list = get_pending_holiday_allowance(xplog_df)
+    n_task  = len(task_df[(task_df["Status"]=="Done")&(task_df["QC Status"]=="Pending QC")]) if not task_df.empty and "QC Status" in task_df.columns else 0
+    n_wa    = len(wa_list)
+    n_app   = len(xplog_df[xplog_df["Applied By"]==USER]) if not xplog_df.empty and "Applied By" in xplog_df.columns else 0
     st.markdown(f"""<div class="stat-row stat-row-3">
-      <div class="stat-cell"><div class="stat-num" style="color:var(--red);">{n_task_pend}</div>
+      <div class="stat-cell"><div class="stat-num" style="color:var(--red);">{n_task}</div>
         <div class="stat-lbl">XP task pending</div></div>
-      <div class="stat-cell"><div class="stat-num" style="color:#F27127;">{n_wa_pend}</div>
-        <div class="stat-lbl">weekend allowance pending</div></div>
-      <div class="stat-cell"><div class="stat-num" style="color:var(--gdk);">
-        {len(xplog_df[xplog_df["Applied By"]==USER]) if not xplog_df.empty and "Applied By" in xplog_df.columns else 0}</div>
+      <div class="stat-cell"><div class="stat-num" style="color:#F27127;">{n_wa}</div>
+        <div class="stat-lbl">allowance pending</div></div>
+      <div class="stat-cell"><div class="stat-num" style="color:var(--gdk);">{n_app}</div>
         <div class="stat-lbl">approved oleh kamu</div></div>
     </div>""", unsafe_allow_html=True)
 
     cl, cr = st.columns([3, 2])
+
     with cl:
-        # ── Section 1: XP Task Pending ───────────────────────
+        # ── XP Task Pending ──────────────────────────────────
         st.markdown("#### ⭐ XP Task Pending Approval")
         if not task_df.empty and "QC Status" in task_df.columns:
             pending = task_df[(task_df["Status"]=="Done")&(task_df["QC Status"]=="Pending QC")]
-            if pending.empty:
-                st.info("Tidak ada XP task pending. 🎉")
+            if pending.empty: st.info("Tidak ada XP task pending. 🎉")
             for idx, row in pending.head(20).iterrows():
                 sn    = str(row.get("Staff","")); ref_r = str(row.get("Ref ID",""))
                 task_r= str(row.get("Task Type","")); xp_r = _safe_int(row.get("XP",0))
                 d_r   = str(row.get("Date",""))
-                htype = get_holiday_type(d_r)
-                hb    = HOLIDAY_BONUS.get(htype) if htype else None
+                hb    = calc_holiday_bonus(d_r)
                 extra = f" 🎁 +{hb['xp']} {hb['label']}" if hb else ""
                 with st.expander(f"{sn} — {task_r}  ·  +{xp_r} XP{extra}"):
                     if hb:
-                        st.markdown(f"""<div style="background:{hb['color']}11;border:1px solid {hb['color']}33;
-                          border-radius:7px;padding:8px 11px;margin-bottom:8px;font-size:11px;color:{hb['color']};">
-                          🎁 <strong>{hb['label']} Allowance</strong> +{hb['xp']} XP +{hb['coin']} Coin
-                          akan dicatat otomatis ke XP Log setelah task ini di-approve.</div>""",
-                          unsafe_allow_html=True)
-                    b1, b2, b3 = st.columns(3)
+                        st.markdown(
+                            f'<div style="background:{hb["color"]}11;border:1px solid {hb["color"]}33;'
+                            f'border-radius:7px;padding:8px 11px;margin-bottom:8px;font-size:11px;'
+                            f'color:{hb["color"]};">🎁 <strong>{hb["label"]} Allowance</strong> '
+                            f'+{hb["xp"]} XP akan dicatat ke XP Log setelah di-approve.</div>',
+                            unsafe_allow_html=True)
+                    b1,b2,b3 = st.columns(3)
                     with b1:
-                        if st.button("✅ Approve", key=f"app_{ref_r}_{idx}", use_container_width=True):
+                        if st.button("✅ Approve",key=f"app_{ref_r}_{idx}",use_container_width=True):
                             ri = find_row_by_ref(ref_r)
-                            if ri: ws_batch_update("Task Log", ri, {"M": "OK"})
-                            load_data.clear()
-                            st.session_state.toast_msg = f"Approved **{ref_r}**."
-                            st.rerun()
+                            if ri: ws_batch_update("Task Log",ri,{"M":"OK"})
+                            load_data.clear(); st.session_state.toast_msg=f"Approved **{ref_r}**."; st.rerun()
                     with b2:
-                        if st.button("⏸ Hold", key=f"hold_{ref_r}_{idx}", use_container_width=True):
-                            st.session_state.toast_msg = f"**{ref_r}** di-hold."
-                            st.session_state.toast_type = "warning"; st.rerun()
+                        if st.button("⏸ Hold",key=f"hold_{ref_r}_{idx}",use_container_width=True):
+                            st.session_state.toast_msg=f"**{ref_r}** di-hold."; st.session_state.toast_type="warning"; st.rerun()
                     with b3:
-                        if st.button("❌ Penalti", key=f"pen_{ref_r}_{idx}", use_container_width=True):
+                        if st.button("❌ Penalti",key=f"pen_{ref_r}_{idx}",use_container_width=True):
                             ri = find_row_by_ref(ref_r)
-                            if ri: ws_batch_update("Task Log", ri, {"M": "Ada Isu"})
-                            load_data.clear()
-                            st.session_state.toast_msg = f"Penalti **{ref_r}**."
-                            st.session_state.toast_type = "error"; st.rerun()
+                            if ri: ws_batch_update("Task Log",ri,{"M":"Ada Isu"})
+                            load_data.clear(); st.session_state.toast_msg=f"Penalti **{ref_r}**."; st.session_state.toast_type="error"; st.rerun()
 
-        # ── Section 2: Weekend Allowance Pending ─────────────
+        # ── Weekend & Holiday Allowance Pending ──────────────
         st.markdown("---")
         st.markdown("#### 🎁 Weekend & Holiday Allowance Pending")
-        if not wa_pending:
+        if not wa_list:
             st.info("Tidak ada Weekend Allowance pending.")
         else:
-            for wi, wa in enumerate(wa_pending):
-                sn_wa  = wa["staff"]
-                amt_wa = wa["amount"]
-                rsn_wa = wa["reason"]
-                ts_wa  = wa["timestamp"]
-                av_col = STAFF_COLORS.get(sn_wa, "#1a1200")
-                av_ini = sn_wa[:2].upper()
-                # Deteksi tipe dari reason
-                hcolor = "#F27127" if "Sabtu" in rsn_wa else "#d97706" if "Minggu" in rsn_wa else "#dc2626"
-                hlabel = "Sabtu" if "Sabtu" in rsn_wa else "Minggu" if "Minggu" in rsn_wa else "Tanggal Merah"
-                st.markdown(f"""<div style="background:#fff;border:1.5px solid {hcolor}33;
-                  border-radius:10px;padding:12px 14px;margin-bottom:8px;">
-                  <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px;">
-                    <div style="width:32px;height:32px;border-radius:9px;background:{av_col};
-                      display:flex;align-items:center;justify-content:center;
-                      font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">{av_ini}</div>
-                    <div style="flex:1;min-width:0;">
-                      <div style="font-size:13px;font-weight:600;color:#1a1200;">{sn_wa}</div>
-                      <div style="font-size:11px;color:#b89060;">{rsn_wa}</div>
-                    </div>
-                    <div style="text-align:right;flex-shrink:0;">
-                      <div style="font-size:18px;font-weight:700;font-family:var(--mono);
-                        color:{hcolor};">+{amt_wa} XP</div>
-                      <span style="font-size:9px;font-weight:700;padding:1px 7px;border-radius:99px;
-                        background:{hcolor}15;color:{hcolor};border:1px solid {hcolor}33;">🎁 {hlabel}</span>
-                    </div>
-                  </div>
-                  <div style="font-size:10px;color:#b89060;margin-bottom:8px;">📅 {ts_wa[:16]}</div>
-                </div>""", unsafe_allow_html=True)
-                wa_b1, wa_b2 = st.columns(2)
-                with wa_b1:
-                    if st.button(f"✅ Setujui +{amt_wa} XP", key=f"wa_ok_{wi}_{sn_wa}", use_container_width=True):
-                        # Update Applied By di XP Log → APPROVED
-                        if not xplog_df.empty and "Applied By" in xplog_df.columns:
-                            wb_  = get_cached_wb()
-                            ws_  = wb_.worksheet("XP Log")
-                            all_rows = ws_.get_all_values()
-                            for ri_, r_ in enumerate(all_rows):
-                                if (len(r_) >= 6 and r_[1]==sn_wa and
+            for wi, wa in enumerate(wa_list):
+                sn_wa  = wa["staff"]; amt_wa = wa["amount"]
+                rsn_wa = wa["reason"]; ts_wa  = wa["ts"][:16]
+                av_c   = STAFF_COLORS.get(sn_wa,"#1a1200")
+                av_i   = sn_wa[:2].upper()
+                hcol   = "#dc2626" if "Merah" in rsn_wa else "#d97706" if "Minggu" in rsn_wa else "#F27127"
+                hlbl   = "Tanggal Merah" if "Merah" in rsn_wa else "Minggu" if "Minggu" in rsn_wa else "Sabtu"
+                st.markdown(
+                    f'<div style="background:#fff;border:1.5px solid {hcol}33;border-radius:10px;'
+                    f'padding:12px 14px;margin-bottom:8px;">'
+                    f'<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px;">'
+                    f'<div style="width:32px;height:32px;border-radius:9px;background:{av_c};'
+                    f'display:flex;align-items:center;justify-content:center;font-size:11px;'
+                    f'font-weight:700;color:#fff;flex-shrink:0;">{av_i}</div>'
+                    f'<div style="flex:1;min-width:0;">'
+                    f'<div style="font-size:13px;font-weight:600;color:#1a1200;">{sn_wa}</div>'
+                    f'<div style="font-size:11px;color:#b89060;">{rsn_wa}</div></div>'
+                    f'<div style="text-align:right;flex-shrink:0;">'
+                    f'<div style="font-size:18px;font-weight:700;font-family:var(--mono);color:{hcol};">'
+                    f'+{amt_wa} XP</div>'
+                    f'<span style="font-size:9px;font-weight:700;padding:1px 7px;border-radius:99px;'
+                    f'background:{hcol}15;color:{hcol};border:1px solid {hcol}33;">🎁 {hlbl}</span></div></div>'
+                    f'<div style="font-size:10px;color:#b89060;margin-bottom:8px;">📅 {ts_wa}</div></div>',
+                    unsafe_allow_html=True)
+                wc1, wc2 = st.columns(2)
+                with wc1:
+                    if st.button(f"✅ Setujui +{amt_wa} XP", key=f"wa_ok_{wi}", use_container_width=True):
+                        try:
+                            wb_ = get_cached_wb(); ws_ = wb_.worksheet("XP Log")
+                            rows_ = ws_.get_all_values()
+                            for ri_, r_ in enumerate(rows_):
+                                if (len(r_)>=6 and r_[1]==sn_wa and
                                     r_[2]=="Weekend Allowance" and
                                     r_[5]=="PENDING" and r_[4]==rsn_wa):
-                                    ws_.update_cell(ri_+1, 6, USER)
-                                    break
+                                    ws_.update_cell(ri_+1,6,USER); break
+                        except Exception: pass
                         load_data.clear()
-                        st.session_state.toast_msg = f"🎁 Weekend Allowance **+{amt_wa} XP** untuk **{sn_wa}** disetujui."
+                        st.session_state.toast_msg = f"🎁 +{amt_wa} XP Weekend Allowance untuk **{sn_wa}** disetujui."
                         st.rerun()
-                with wa_b2:
-                    if st.button("❌ Tolak", key=f"wa_no_{wi}_{sn_wa}", use_container_width=True):
-                        if not xplog_df.empty and "Applied By" in xplog_df.columns:
-                            wb_  = get_cached_wb()
-                            ws_  = wb_.worksheet("XP Log")
-                            all_rows = ws_.get_all_values()
-                            for ri_, r_ in enumerate(all_rows):
-                                if (len(r_) >= 6 and r_[1]==sn_wa and
+                with wc2:
+                    if st.button("❌ Tolak", key=f"wa_no_{wi}", use_container_width=True):
+                        try:
+                            wb_ = get_cached_wb(); ws_ = wb_.worksheet("XP Log")
+                            rows_ = ws_.get_all_values()
+                            for ri_, r_ in enumerate(rows_):
+                                if (len(r_)>=6 and r_[1]==sn_wa and
                                     r_[2]=="Weekend Allowance" and
                                     r_[5]=="PENDING" and r_[4]==rsn_wa):
-                                    ws_.update_cell(ri_+1, 6, "REJECTED")
-                                    break
+                                    ws_.update_cell(ri_+1,6,"REJECTED"); break
+                        except Exception: pass
                         load_data.clear()
                         st.session_state.toast_msg = f"Weekend Allowance **{sn_wa}** ditolak."
                         st.session_state.toast_type = "warning"; st.rerun()
 
     with cr:
-        # ── Weekend Summary Minggu Ini ───────────────────────
+        # ── Weekend Summary ──────────────────────────────────
         st.markdown("#### 📊 Ringkasan Weekend Ini")
-        ws_summary = get_weekend_summary_this_week(xplog_df, task_df)
-        if not ws_summary:
+        ws_sum = get_weekend_summary(task_df)
+        if not ws_sum:
             st.info("Belum ada aktivitas weekend minggu ini.")
         else:
-            for sn_s, data_s in ws_summary.items():
-                av_c  = STAFF_COLORS.get(sn_s, "#1a1200")
-                av_i  = sn_s[:2].upper()
-                total = data_s["total_bonus"]
-                tasks = data_s["total_tasks"]
-                st.markdown(f"""<div style="background:#fff;border:1px solid rgba(242,113,39,.12);
-                  border-radius:9px;padding:10px 12px;margin-bottom:6px;
-                  display:flex;align-items:center;gap:9px;">
-                  <div style="width:26px;height:26px;border-radius:7px;background:{av_c};
-                    display:flex;align-items:center;justify-content:center;
-                    font-size:9px;font-weight:700;color:#fff;flex-shrink:0;">{av_i}</div>
-                  <div style="flex:1;min-width:0;">
-                    <div style="font-size:12px;font-weight:600;color:#1a1200;">{sn_s}</div>
-                    <div style="font-size:10px;color:#b89060;">{tasks} task weekend</div>
-                  </div>
-                  <div style="text-align:right;flex-shrink:0;">
-                    <div style="font-size:13px;font-weight:700;font-family:var(--mono);color:#F27127;">
-                      +{total} XP</div>
-                  </div>
-                </div>""", unsafe_allow_html=True)
+            for sn_s, data_s in ws_sum.items():
+                av_c = STAFF_COLORS.get(sn_s,"#1a1200")
+                av_i = sn_s[:2].upper()
+                st.markdown(
+                    f'<div style="background:#fff;border:1px solid rgba(242,113,39,.12);'
+                    f'border-radius:9px;padding:9px 12px;margin-bottom:5px;'
+                    f'display:flex;align-items:center;gap:9px;">'
+                    f'<div style="width:24px;height:24px;border-radius:7px;background:{av_c};'
+                    f'display:flex;align-items:center;justify-content:center;font-size:9px;'
+                    f'font-weight:700;color:#fff;flex-shrink:0;">{av_i}</div>'
+                    f'<div style="flex:1;min-width:0;">'
+                    f'<div style="font-size:12px;font-weight:600;color:#1a1200;">{sn_s}</div>'
+                    f'<div style="font-size:10px;color:#b89060;">{data_s["tasks"]} task weekend</div></div>'
+                    f'<div style="font-size:13px;font-weight:700;font-family:var(--mono);'
+                    f'color:#F27127;">+{data_s["bonus_xp"]} XP</div></div>',
+                    unsafe_allow_html=True)
 
         st.markdown("---")
         st.markdown("#### ✏️ Bonus / Penalti Manual")
@@ -2088,18 +2016,16 @@ def page_xp_control():
             tgt  = st.selectbox("Staff", ALL_STAFF_FLAT[1:])
             xtyp = st.selectbox("Jenis", [
                 "Bonus XP Manual","Penalti XP","Hold XP",
-                "Weekend Allowance Manual","Holiday Allowance Manual"
-            ])
+                "Weekend Allowance Manual","Holiday Allowance Manual"])
             amt  = st.number_input("Jumlah XP", 1, 500, 25)
             rsn  = st.text_input("Alasan")
             sub  = st.form_submit_button("Terapkan", use_container_width=True)
         if sub:
             sign = -1 if "Penalti" in xtyp else 1
-            ws_append("XP Log", [now_str(), tgt, xtyp, sign*amt, rsn, USER])
+            ws_append("XP Log",[now_str(),tgt,xtyp,sign*amt,rsn,USER])
             load_data.clear()
             st.session_state.toast_msg = f"{'Bonus' if sign>0 else 'Penalti'} {amt} XP → **{tgt}**."
             st.rerun()
-
 def page_kelola_project():
     cl,cr=st.columns([3,2])
     with cl:
