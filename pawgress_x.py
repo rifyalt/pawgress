@@ -172,83 +172,64 @@ html,body,[class*="css"]{font-family:var(--font)!important;background:var(--bg)!
 /* ── Sidebar shell ── */
 section[data-testid="stSidebar"]{background:#1a1200!important;border-right:none!important;}
 section[data-testid="stSidebar"] *{color:rgba(255,255,255,.7)!important;}
-section[data-testid="stSidebar"] hr{border-color:rgba(255,255,255,.07)!important;margin:4px 0!important;}
+section[data-testid="stSidebar"] hr{border-color:rgba(255,255,255,.07)!important;margin:3px 0!important;}
 
-/* Layer 1: root sidebar div — hapus padding kiri bawaan Streamlit */
-section[data-testid="stSidebar"] > div:first-child{
-  padding:0!important;
-  margin:0!important;
-}
+/* Hapus semua padding bawaan Streamlit di sidebar */
+section[data-testid="stSidebar"] > div:first-child{padding:0!important;margin:0!important;}
+section[data-testid="stSidebar"] .block-container{padding:0!important;margin:0!important;}
+section[data-testid="stSidebar"] [data-testid="stVerticalBlock"]{gap:0!important;padding:0!important;margin:0!important;}
+section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] > div{padding:0!important;margin:0!important;width:100%!important;}
+section[data-testid="stSidebar"] .element-container{padding:0!important;margin:0!important;width:100%!important;}
+section[data-testid="stSidebar"] .stButton{padding:0!important;margin:0!important;width:100%!important;}
+section[data-testid="stSidebar"] .stButton > div{padding:0!important;margin:0!important;width:100%!important;}
 
-/* Layer 2: semua container di dalam */
-section[data-testid="stSidebar"] .block-container{
-  padding:0!important;
-  margin:0!important;
-}
-section[data-testid="stSidebar"] [data-testid="stVerticalBlock"]{
-  gap:2px!important;
-  padding:0!important;
-  margin:0!important;
-}
-section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] > div{
-  padding:0!important;
-  margin:0!important;
-  width:100%!important;
-}
-
-/* Layer 3: element-container (wrap per komponen) */
-section[data-testid="stSidebar"] .element-container{
-  padding:0!important;
-  margin:0!important;
-  width:100%!important;
-}
-
-/* Layer 4: stButton wrapper */
-section[data-testid="stSidebar"] .stButton{
-  padding:0!important;
-  margin:0!important;
-  width:100%!important;
-}
-section[data-testid="stSidebar"] .stButton > div{
-  padding:0!important;
-  margin:0!important;
-  width:100%!important;
-}
-
-/* ── Button nav ── */
+/* ── Nav button — compact & clean ── */
 section[data-testid="stSidebar"] .stButton > button{
   font-family:var(--font)!important;
-  font-size:12.5px!important;
+  font-size:13px!important;
   font-weight:400!important;
-  color:rgba(255,255,255,.48)!important;
+  color:rgba(255,255,255,.5)!important;
   background:transparent!important;
   border:1px solid transparent!important;
   border-radius:8px!important;
-  width:calc(100% - 14px)!important;
-  margin:1px 7px!important;
-  padding:8px 13px!important;
+  width:calc(100% - 16px)!important;
+  margin:1px 8px!important;
+  padding:9px 13px!important;
   text-align:left!important;
   justify-content:flex-start!important;
   display:flex!important;
   align-items:center!important;
+  gap:8px!important;
   cursor:pointer!important;
-  transition:all .12s!important;
-  letter-spacing:-.01em!important;
-  line-height:1.4!important;
+  transition:all .1s!important;
+  line-height:1.3!important;
   box-sizing:border-box!important;
+  min-height:unset!important;
+  height:auto!important;
+}
+section[data-testid="stSidebar"] .stButton > button p{
+  font-size:13px!important;
+  font-weight:400!important;
+  line-height:1.3!important;
+  margin:0!important;
 }
 section[data-testid="stSidebar"] .stButton > button:hover{
   background:rgba(255,255,255,.07)!important;
-  color:rgba(255,255,255,.9)!important;
+  color:rgba(255,255,255,.88)!important;
+  border-color:transparent!important;
 }
 section[data-testid="stSidebar"] .stButton > button[kind="primary"]{
   color:#fff!important;
   font-weight:600!important;
-  background:rgba(255,165,2,.18)!important;
-  border:1px solid rgba(255,165,2,.3)!important;
+  background:rgba(255,165,2,.16)!important;
+  border:1px solid rgba(255,165,2,.25)!important;
+}
+section[data-testid="stSidebar"] .stButton > button[kind="primary"] p{
+  font-weight:600!important;
+  color:#fff!important;
 }
 section[data-testid="stSidebar"] .stButton > button[kind="primary"]:hover{
-  background:rgba(255,165,2,.25)!important;
+  background:rgba(255,165,2,.22)!important;
 }
 /* ── Form elements ── */
 .stButton > button{font-family:var(--font)!important;font-weight:500!important;border-radius:var(--r)!important;transition:all .1s!important;}
@@ -345,13 +326,13 @@ hr{border-color:var(--line)!important;}
 .q-bar-fill{height:100%;border-radius:99px;}
 
 /* ── Sidebar user card ── */
-.sb-user{margin:8px 8px 2px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:13px 13px 11px;}
-.sb-av{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;}
-.sb-xpb{height:3px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-top:10px;}
+.sb-user{margin:8px 8px 2px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:11px 12px;}
+.sb-av{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+.sb-xpb{height:3px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-top:8px;}
 .sb-xpf{height:100%;background:linear-gradient(90deg,#FFA502,#FED330);border-radius:99px;}
 
 /* ── Sidebar section label ── */
-.sb-sec{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.3px;color:rgba(255,255,255,.18);padding:9px 20px 2px;}
+.sb-sec{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,.18);padding:10px 20px 3px;display:block;}
 
 /* ── Page header ── */
 .pg-title{font-size:18px;font-weight:600;color:var(--navy);letter-spacing:-.3px;margin-bottom:2px;}
@@ -804,14 +785,14 @@ LVL_NAME, LVL_MIN, LVL_MAX, LVL_NEXT, LVL_PCT = get_level(TOTAL_XP)
 with st.sidebar:
     # ── Logo ────────────────────────────────────────────────
     st.markdown("""
-    <div style="padding:16px 16px 12px;border-bottom:1px solid rgba(255,255,255,.07);">
+    <div style="padding:14px 14px 11px;border-bottom:1px solid rgba(255,255,255,.07);">
       <div style="display:flex;align-items:center;gap:10px;">
-        <div style="width:32px;height:32px;background:linear-gradient(135deg,#F27127,#FFA502);
-          border-radius:9px;display:flex;align-items:center;justify-content:center;
-          font-size:15px;flex-shrink:0;">🐾</div>
+        <div style="width:30px;height:30px;background:linear-gradient(135deg,#F27127,#FFA502);
+          border-radius:8px;display:flex;align-items:center;justify-content:center;
+          font-size:14px;flex-shrink:0;">🐾</div>
         <div>
-          <div style="font-size:14px;font-weight:700;color:#fff;letter-spacing:-.2px;">PAWGRESS</div>
-          <div style="font-size:9px;color:rgba(255,255,255,.28);margin-top:2px;
+          <div style="font-size:13px;font-weight:700;color:#fff;letter-spacing:-.1px;line-height:1.1;">PAWGRESS</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.25);margin-top:2px;
             letter-spacing:.4px;text-transform:uppercase;">Season April</div>
         </div>
       </div>
@@ -824,31 +805,24 @@ with st.sidebar:
     if ROLE != "Manager":
         ai_c = ai_colors.get(AI_TYPE, "#FFA502")
         st.markdown(f"""
-        <div style="margin:8px 8px 2px;background:rgba(255,255,255,.05);
-          border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:11px 12px;">
+        <div class="sb-user">
           <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
-            <div style="width:30px;height:30px;border-radius:8px;background:{av_col};
-              display:flex;align-items:center;justify-content:center;
-              font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">{av_init}</div>
+            <div class="sb-av" style="background:{av_col};">{av_init}</div>
             <div style="flex:1;min-width:0;">
-              <div style="font-size:12px;font-weight:600;color:#fff;line-height:1.2;">{USER}</div>
+              <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,.9);line-height:1.2;">{USER}</div>
               <div style="font-size:10px;color:rgba(255,255,255,.32);margin-top:1px;">{ROLE}</div>
             </div>
             <div style="text-align:right;flex-shrink:0;">
-              <div style="font-size:16px;font-weight:700;color:#FFA502;
-                font-family:var(--mono);line-height:1;">{_get_lvl_idx(TOTAL_XP)}</div>
-              <div style="font-size:8px;color:rgba(255,255,255,.22);letter-spacing:.3px;">LV</div>
+              <div style="font-size:15px;font-weight:700;color:#FFA502;font-family:var(--mono);line-height:1;">{_get_lvl_idx(TOTAL_XP)}</div>
+              <div style="font-size:8px;color:rgba(255,255,255,.2);letter-spacing:.3px;">LV</div>
             </div>
           </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;">
-            <span style="font-size:10px;color:rgba(255,255,255,.32);">{LVL_NAME}</span>
-            <span style="font-size:9px;font-weight:600;padding:1px 7px;border-radius:99px;
-              background:{ai_c}20;color:{ai_c};border:1px solid {ai_c}40;">⚡ {AI_TYPE}</span>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+            <span style="font-size:10px;color:rgba(255,255,255,.3);">{LVL_NAME}</span>
+            <span style="font-size:9px;font-weight:600;padding:1px 6px;border-radius:99px;
+              background:{ai_c}20;color:{ai_c};border:1px solid {ai_c}35;">⚡ {AI_TYPE}</span>
           </div>
-          <div style="height:3px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;">
-            <div style="height:100%;width:{LVL_PCT}%;
-              background:linear-gradient(90deg,#FFA502,#FED330);border-radius:99px;"></div>
-          </div>
+          <div class="sb-xpb"><div class="sb-xpf" style="width:{LVL_PCT}%;"></div></div>
           <div style="display:flex;justify-content:space-between;font-size:10px;
             color:rgba(255,255,255,.2);font-family:var(--mono);margin-top:4px;">
             <span>{TOTAL_XP:,} xp</span>
@@ -858,17 +832,17 @@ with st.sidebar:
     else:
         st.markdown("""
         <div style="margin:8px 8px 2px;background:rgba(255,165,2,.07);
-          border:1px solid rgba(255,165,2,.15);border-radius:11px;padding:11px 12px;">
+          border:1px solid rgba(255,165,2,.15);border-radius:11px;padding:10px 12px;">
           <div style="display:flex;align-items:center;gap:9px;">
             <div style="width:30px;height:30px;border-radius:8px;background:rgba(255,165,2,.15);
-              display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">👑</div>
+              display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">👑</div>
             <div>
-              <div style="font-size:12px;font-weight:600;color:#fff;">Manager</div>
-              <div style="font-size:10px;color:rgba(255,255,255,.32);margin-top:1px;">Full Access</div>
+              <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,.9);">Manager</div>
+              <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:1px;">Full Access · Admin</div>
             </div>
             <div style="margin-left:auto;font-size:9px;font-weight:700;padding:2px 7px;
               border-radius:99px;background:rgba(255,165,2,.15);color:#FFA502;
-              border:1px solid rgba(255,165,2,.25);">ADMIN</div>
+              border:1px solid rgba(255,165,2,.22);">ADMIN</div>
           </div>
         </div>""", unsafe_allow_html=True)
 
