@@ -51,10 +51,10 @@ ALL_STAFF = {
 ALL_STAFF_FLAT = ["Manager"] + ALL_STAFF["Finance"] + ALL_STAFF["Booker"]
 STAFF_ROLE_MAP = {s: r for r, members in ALL_STAFF.items() for s in members}
 STAFF_COLORS   = {
-    "Vial":"#1a1200","Fandi":"#F27127","Geraldi":"#4d9c38","Yati":"#b8940a",
+    "Vial":"var(--sb)","Fandi":"#3a87ab","Geraldi":"#4d9c38","Yati":"#b8940a",
     "Meiji":"#534AB7","Farras":"#c52330","Riega":"#0F6E56","Vero":"#993556",
-    "Rida":"#C9952A","Ade":"#378ADD","Selvy":"#FFA502","Baldy":"#8B6914",
-    "Firda":"#6B7280","Manager":"#1a1200",
+    "Rida":"#C9952A","Ade":"#378ADD","Selvy":"#51a1c4","Baldy":"#8B6914",
+    "Firda":"#6B7280","Manager":"var(--sb)",
 }
 PASSWORDS = {
     "Manager":"789789","Fandi":"fandi123","Yati":"yati123","Riega":"riega123",
@@ -104,7 +104,7 @@ XP_LOG_HEADERS  = ["Timestamp","Staff","Type","Amount","Reason","Applied By"]
 
 # ── Weekend & Holiday Bonus ────────────────────────────
 HOLIDAY_BONUS = {
-    "saturday": {"xp":15,"coin":5, "label":"Sabtu",        "color":"#F27127"},
+    "saturday": {"xp":15,"coin":5, "label":"Sabtu",        "color":"#3a87ab"},
     "sunday":   {"xp":20,"coin":8, "label":"Minggu",       "color":"#d97706"},
     "holiday":  {"xp":25,"coin":10,"label":"Tanggal Merah","color":"#dc2626"},
 }
@@ -126,55 +126,35 @@ COL = {h: i+1 for i, h in enumerate(TASK_HEADERS)}  # gspread 1-based
 # ══════════════════════════════════════════════════════════
 CSS = """
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+/* ── Design Tokens ── */
 :root{
-  /* ── Tema Oranye / Amber ── */
-  /* Primary */
-  --primary:#FFA502;       /* oranye utama */
-  --primary2:#F27127;      /* oranye tua */
-  --primary3:#FFF3E0;      /* oranye sangat muda */
-
-  /* Accent */
-  --accent:#FED330;        /* kuning aksen */
-  --accent2:#F2E399;       /* kuning muda */
-
-  /* Semantic */
-  --gdk:#2d8a4e;--glt:#e8f8ee;   /* hijau success */
-  --ydk:#d97706;--ylt:#fffbeb;   /* amber warning */
-  --red:#dc2626;--rlt:#fef2f2;   /* merah danger */
-  --sdk:#c05a10;--slt:#fff4ec;   /* oranye tua info */
-
-  /* Surface */
-  --bg:#fffdf9;            /* background utama — cream sangat muda */
-  --bg2:#fff8f0;           /* background sekunder */
-  --line:rgba(242,113,39,.12);
-  --line2:rgba(242,113,39,.06);
-  --txt:rgba(30,20,5,.45); /* teks muted */
-
-  /* Navy — tetap untuk sidebar */
-  --navy:#1a1200;          /* hitam kecoklatan — teks utama */
-  --navy2:#2d1f00;
-  --navy3:#fff3e0;         /* light tint primary */
-  --yellow:#FFA502;
-  --green:#acdd9c;
-  --sidebar:#1a1200;       /* sidebar hitam */
-
-  --font:'Sora',sans-serif;--mono:'DM Mono',monospace;
-  --r:8px;--rl:12px;
+  --blue:#51a1c4;    --blue2:#3a87ab;   --bluel:#daedf5;   --bluell:#edf6fa;
+  --rose:#b13f54;    --rose2:#8c3244;   --rosel:#f5dde1;   --rosell:#fbf0f2;
+  --gold:#ddb551;    --gold2:#b89238;   --goldl:#f8edcf;   --goldll:#fdf6e7;
+  --stone:#706948;   --stone2:#5a5439;  --stonel:#e8e3d8;  --stonell:#f4f2ec;
+  --ash:#e8eaea;     --ash2:#d0d3d3;    --ash3:#b2b6b6;    --ash4:#6b7070;
+  --bg:#f4f7f8;      --bg2:#ecf0f1;
+  --ink:#1a2729;     --ink2:#2d3f42;    --ink3:#4a5e61;    --ink4:#7a9094;
+  --line:rgba(81,161,196,.14);
+  --line2:rgba(81,161,196,.07);
+  --sb:#1c2e35;
+  --font:'Sora',sans-serif;
+  --mono:'DM Mono',monospace;
+  --r:8px; --rl:12px;
 }
 
 /* ── Base ── */
-html,body,[class*="css"]{font-family:var(--font)!important;background:var(--bg)!important;color:var(--navy)!important;}
+html,body,[class*="css"]{font-family:var(--font)!important;background:var(--bg)!important;color:var(--ink)!important;}
 .stApp{background:var(--bg)!important;}
 #MainMenu,footer,header{visibility:hidden;}
 .block-container{padding-top:.6rem!important;padding-bottom:1.5rem!important;max-width:1240px!important;}
 
 /* ── Sidebar shell ── */
-section[data-testid="stSidebar"]{background:#1a1200!important;border-right:none!important;}
+section[data-testid="stSidebar"]{background:var(--sb)!important;border-right:none!important;}
 section[data-testid="stSidebar"] *{color:rgba(255,255,255,.7)!important;}
 section[data-testid="stSidebar"] hr{border-color:rgba(255,255,255,.07)!important;margin:3px 0!important;}
-
-/* Hapus semua padding bawaan Streamlit di sidebar */
 section[data-testid="stSidebar"] > div:first-child{padding:0!important;margin:0!important;}
 section[data-testid="stSidebar"] .block-container{padding:0!important;margin:0!important;}
 section[data-testid="stSidebar"] [data-testid="stVerticalBlock"]{gap:0!important;padding:0!important;margin:0!important;}
@@ -183,7 +163,7 @@ section[data-testid="stSidebar"] .element-container{padding:0!important;margin:0
 section[data-testid="stSidebar"] .stButton{padding:0!important;margin:0!important;width:100%!important;}
 section[data-testid="stSidebar"] .stButton > div{padding:0!important;margin:0!important;width:100%!important;}
 
-/* ── Nav button — compact & clean ── */
+/* ── Sidebar nav button ── */
 section[data-testid="stSidebar"] .stButton > button{
   font-family:var(--font)!important;
   font-size:13px!important;
@@ -208,93 +188,89 @@ section[data-testid="stSidebar"] .stButton > button{
   height:auto!important;
 }
 section[data-testid="stSidebar"] .stButton > button p{
-  font-size:13px!important;
-  font-weight:400!important;
-  line-height:1.3!important;
-  margin:0!important;
+  font-size:13px!important;font-weight:400!important;line-height:1.3!important;margin:0!important;
 }
 section[data-testid="stSidebar"] .stButton > button:hover{
-  background:rgba(255,255,255,.07)!important;
-  color:rgba(255,255,255,.88)!important;
-  border-color:transparent!important;
+  background:rgba(255,255,255,.07)!important;color:rgba(255,255,255,.88)!important;
 }
 section[data-testid="stSidebar"] .stButton > button[kind="primary"]{
-  color:#fff!important;
-  font-weight:600!important;
-  background:rgba(255,165,2,.16)!important;
-  border:1px solid rgba(255,165,2,.25)!important;
+  color:#fff!important;font-weight:600!important;
+  background:rgba(81,161,196,.22)!important;
+  border:1px solid rgba(81,161,196,.38)!important;
 }
 section[data-testid="stSidebar"] .stButton > button[kind="primary"] p{
-  font-weight:600!important;
-  color:#fff!important;
+  font-weight:600!important;color:#fff!important;
 }
 section[data-testid="stSidebar"] .stButton > button[kind="primary"]:hover{
-  background:rgba(255,165,2,.22)!important;
+  background:rgba(81,161,196,.3)!important;
 }
+
 /* ── Form elements ── */
 .stButton > button{font-family:var(--font)!important;font-weight:500!important;border-radius:var(--r)!important;transition:all .1s!important;}
-.stTextInput > div > div > input,
-.stSelectbox > div > div,
-.stTextArea textarea,
-.stNumberInput input{
+.stTextInput > div > div > input,.stSelectbox > div > div,.stTextArea textarea,.stNumberInput input{
   font-family:var(--font)!important;font-size:13px!important;
   border-radius:var(--r)!important;
   border:1.5px solid var(--line)!important;
-  background:#fff!important;color:var(--navy)!important;
+  background:#fff!important;color:var(--ink)!important;
 }
 hr{border-color:var(--line)!important;}
-.stSuccess{background:var(--glt)!important;color:var(--gdk)!important;border:1px solid rgba(77,156,56,.3)!important;border-radius:var(--r)!important;font-size:13px!important;}
-.stWarning{background:var(--ylt)!important;color:var(--ydk)!important;border:1px solid rgba(185,148,10,.3)!important;border-radius:var(--r)!important;font-size:13px!important;}
-.stError{background:var(--rlt)!important;color:var(--red)!important;border:1px solid rgba(197,35,48,.3)!important;border-radius:var(--r)!important;font-size:13px!important;}
-.stInfo{background:#fff4ec!important;color:#c05a10!important;border:1px solid rgba(242,113,39,.3)!important;border-radius:var(--r)!important;font-size:13px!important;}
+.stSuccess{background:var(--bluel)!important;color:var(--blue2)!important;border:1px solid rgba(81,161,196,.3)!important;border-radius:var(--r)!important;font-size:13px!important;}
+.stWarning{background:var(--goldl)!important;color:var(--gold2)!important;border:1px solid rgba(221,181,81,.3)!important;border-radius:var(--r)!important;font-size:13px!important;}
+.stError{background:var(--rosel)!important;color:var(--rose2)!important;border:1px solid rgba(177,63,84,.3)!important;border-radius:var(--r)!important;font-size:13px!important;}
+.stInfo{background:var(--bluell)!important;color:var(--blue2)!important;border:1px solid rgba(81,161,196,.25)!important;border-radius:var(--r)!important;font-size:13px!important;}
 .stTabs [data-baseweb="tab-list"]{gap:0!important;border-bottom:1px solid var(--line)!important;}
-.stTabs [data-baseweb="tab"]{font-family:var(--font)!important;font-size:13px!important;font-weight:400!important;color:var(--txt)!important;padding:8px 14px!important;}
-.stTabs [aria-selected="true"]{color:#FFA502!important;font-weight:600!important;border-bottom:2px solid #FFA502!important;}
+.stTabs [data-baseweb="tab"]{font-family:var(--font)!important;font-size:13px!important;font-weight:400!important;color:var(--ink4)!important;padding:8px 14px!important;}
+.stTabs [aria-selected="true"]{color:var(--blue)!important;font-weight:600!important;border-bottom:2px solid var(--blue)!important;}
 
 /* ── Cards ── */
-.card{background:#fff;border:1px solid var(--line);border-radius:var(--rl);padding:16px 18px;margin-bottom:10px;}
-.card-hd{font-size:12px;font-weight:600;color:var(--navy);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
-.card-hd span{font-size:11px;font-weight:400;color:var(--txt);}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--rl);padding:14px 16px;margin-bottom:10px;}
+.card-hd{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+.card-hd span{font-size:11px;font-weight:400;color:var(--ink4);}
 
 /* ── Stat strip ── */
-.stat-row{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--rl);overflow:hidden;margin-bottom:16px;}
+.stat-row{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--rl);overflow:hidden;margin-bottom:14px;}
 .stat-row-4{grid-template-columns:repeat(4,1fr);}
 .stat-row-3{grid-template-columns:repeat(3,1fr);}
 .stat-cell{background:#fff;padding:12px 14px;}
-.stat-num{font-size:22px;font-weight:600;font-family:var(--mono);letter-spacing:-.4px;line-height:1;color:var(--navy);}
-.stat-lbl{font-size:10px;color:var(--txt);margin-top:4px;text-transform:uppercase;letter-spacing:.3px;}
+.stat-num{font-size:22px;font-weight:600;font-family:var(--mono);letter-spacing:-.4px;line-height:1;color:var(--ink);}
+.stat-lbl{font-size:10px;color:var(--ink4);margin-top:3px;text-transform:uppercase;letter-spacing:.3px;}
 .stat-sub{font-size:11px;margin-top:2px;}
 
 /* ── Pills ── */
 .pill{display:inline-flex;align-items:center;font-size:10px;font-weight:600;padding:2px 8px;border-radius:99px;white-space:nowrap;}
-.pill-green{background:var(--glt);color:var(--gdk);}
-.pill-blue{background:#fff4ec;color:#c05a10;}
-.pill-amber{background:var(--ylt);color:var(--ydk);}
-.pill-red{background:var(--rlt);color:var(--red);}
-.pill-gray{background:var(--bg2);color:var(--txt);}
-.pill-navy{background:#fff3e0;color:#1a1200;}
+.pill-done{background:var(--bluel);color:var(--blue2);}
+.pill-prog{background:var(--goldl);color:var(--gold2);}
+.pill-pend{background:var(--stonel);color:var(--stone2);}
+.pill-err{background:var(--rosel);color:var(--rose2);}
+.pill-gray{background:var(--bg2);color:var(--ink4);}
+/* legacy aliases */
+.pill-green{background:var(--bluel);color:var(--blue2);}
+.pill-blue{background:var(--bluell);color:var(--blue2);}
+.pill-amber{background:var(--goldl);color:var(--gold2);}
+.pill-red{background:var(--rosel);color:var(--rose2);}
+.pill-navy{background:var(--stonel);color:var(--stone2);}
 
-/* ── Mono tag ── */
-.mtag{font-family:var(--mono);font-size:10px;padding:1px 6px;border-radius:3px;background:var(--ylt);color:var(--ydk);}
+/* ── Mono tag (ref id) ── */
+.mtag{font-family:var(--mono);font-size:10px;padding:1px 6px;border-radius:3px;background:var(--bluell);color:var(--blue2);}
 
-/* ── Row items ── */
+/* ── Row cards ── */
 .row-card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:11px 14px;margin-bottom:6px;transition:border-color .1s;}
-.row-card:hover{border-color:#FFA502;}
-.task-title{font-size:13px;font-weight:600;color:var(--navy);}
-.task-meta{font-size:11px;color:var(--txt);margin-top:3px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.row-card:hover{border-color:var(--blue);}
+.task-title{font-size:13px;font-weight:600;color:var(--ink);}
+.task-meta{font-size:11px;color:var(--ink4);margin-top:3px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
 
 /* ── SLA ── */
-.sla-ok{color:var(--gdk);font-size:11px;font-weight:600;}
-.sla-w{color:var(--ydk);font-size:11px;font-weight:600;}
-.sla-ov{color:var(--red);font-size:11px;font-weight:600;}
-.sla-d{color:var(--txt);font-size:11px;}
+.sla-ok{color:var(--blue2);font-size:11px;font-weight:600;}
+.sla-w{color:var(--gold2);font-size:11px;font-weight:600;}
+.sla-ov{color:var(--rose);font-size:11px;font-weight:600;}
+.sla-d{color:var(--ink4);font-size:11px;}
 
 /* ── Progress bar ── */
 .pbar{height:3px;background:var(--bg2);border-radius:99px;overflow:hidden;}
 .pbar-fill{height:100%;border-radius:99px;}
 
 /* ── XP panel ── */
-.xp-panel{background:#1a1200;border-radius:var(--r);padding:14px 16px;}
+.xp-panel{background:var(--sb);border-radius:var(--r);padding:14px 16px;}
 .xp-lbl{font-size:11px;color:rgba(255,255,255,.4);font-weight:500;}
 .xp-val{font-family:var(--mono);font-size:11px;font-weight:600;}
 .xp-line{display:flex;justify-content:space-between;padding:2px 0;}
@@ -304,51 +280,48 @@ hr{border-color:var(--line)!important;}
 /* ── Leaderboard ── */
 .lb-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line2);}
 .lb-item:last-child{border-bottom:none;}
-.lb-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff;flex-shrink:0;}
+.lb-av{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;}
 .lb-pbar{height:2px;background:var(--bg2);border-radius:99px;margin-top:5px;overflow:hidden;}
 .lb-pbar-f{height:100%;border-radius:99px;}
 
-/* ── Hero card ── */
-.hero{background:#1a1200;border-radius:var(--rl);padding:20px 22px;position:relative;overflow:hidden;}
-.hero::after{content:'';position:absolute;right:-24px;top:-24px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.03);}
+/* ── Hero / dark card ── */
+.hero{background:var(--sb);border-radius:var(--rl);padding:20px 22px;position:relative;overflow:hidden;}
 .hero-label{font-size:10px;font-weight:600;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
-.hero-num{font-size:48px;font-weight:600;font-family:var(--mono);line-height:1;color:var(--yellow);}
+.hero-num{font-size:48px;font-weight:600;font-family:var(--mono);line-height:1;color:var(--blue);}
 .hero-title{font-size:15px;font-weight:600;color:#fff;margin-top:5px;}
 .hero-sub{font-size:11px;color:rgba(255,255,255,.35);margin-top:2px;}
 .hero-bar{height:3px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin-top:14px;}
-.hero-bar-f{height:100%;background:linear-gradient(90deg,#FFA502,#FED330);border-radius:99px;}
+.hero-bar-f{height:100%;background:linear-gradient(90deg,var(--blue),#7ac4de);border-radius:99px;}
 .hero-note{display:flex;justify-content:space-between;margin-top:4px;font-size:10px;color:rgba(255,255,255,.2);font-family:var(--mono);}
 
 /* ── Quest row ── */
 .q-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line2);}
 .q-row:last-child{border-bottom:none;}
-.q-bar-wrap{height:3px;background:rgba(242,113,39,.06);border-radius:99px;overflow:hidden;margin-top:4px;}
+.q-bar-wrap{height:3px;background:var(--bg2);border-radius:99px;overflow:hidden;margin-top:4px;}
 .q-bar-fill{height:100%;border-radius:99px;}
 
 /* ── Sidebar user card ── */
-.sb-user{margin:8px 8px 2px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:11px 12px;}
-.sb-av{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
-.sb-xpb{height:3px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-top:8px;}
-.sb-xpf{height:100%;background:linear-gradient(90deg,#FFA502,#FED330);border-radius:99px;}
-
-/* ── Sidebar section label ── */
-.sb-sec{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,.18);padding:10px 20px 3px;display:block;}
+.sb-user{margin:8px 8px 2px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:10px 11px;}
+.sb-av{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;}
+.sb-xpb{height:3px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin-top:7px;}
+.sb-xpf{height:100%;background:linear-gradient(90deg,var(--blue),#7ac4de);border-radius:99px;}
+.sb-sec{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,.2);padding:10px 20px 3px;display:block;}
 
 /* ── Page header ── */
-.pg-title{font-size:18px;font-weight:600;color:var(--navy);letter-spacing:-.3px;margin-bottom:2px;}
-.pg-sub{font-size:12px;color:var(--txt);margin-bottom:14px;}
+.pg-title{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-.3px;margin-bottom:2px;}
+.pg-sub{font-size:12px;color:var(--ink4);margin-bottom:14px;}
 
 /* ── Session dots ── */
-.dot-on{width:6px;height:6px;border-radius:50%;background:var(--gdk);flex-shrink:0;}
-.dot-off{width:6px;height:6px;border-radius:50%;background:rgba(30,20,5,.15);flex-shrink:0;}
-.sess-on{font-size:10px;font-weight:600;color:var(--gdk);}
-.sess-off{font-size:10px;color:var(--txt);}
+.dot-on{width:6px;height:6px;border-radius:7px;background:var(--blue2);flex-shrink:0;}
+.dot-off{width:6px;height:6px;border-radius:7px;background:rgba(26,39,41,.15);flex-shrink:0;}
+.sess-on{font-size:10px;font-weight:600;color:var(--blue2);}
+.sess-off{font-size:10px;color:var(--ink4);}
 
 /* ── Event banner ── */
-.ev{background:#1a1200;border-radius:var(--r);padding:11px 16px;display:flex;align-items:center;gap:14px;margin-bottom:16px;}
+.ev{background:var(--sb);border-radius:var(--r);padding:11px 16px;display:flex;align-items:center;gap:14px;margin-bottom:14px;}
 .ev-t{font-size:12px;font-weight:600;color:#fff;}
 .ev-s{font-size:11px;color:rgba(255,255,255,.3);margin-top:1px;}
-.ev-badge{font-size:11px;font-weight:700;background:#FFA502;color:#1a1200;padding:3px 10px;border-radius:4px;flex-shrink:0;margin-left:auto;}
+.ev-badge{font-size:11px;font-weight:700;background:var(--gold);color:#2a2000;padding:3px 10px;border-radius:4px;flex-shrink:0;margin-left:auto;}
 
 /* ── Milestone ── */
 .ms{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r);margin-bottom:6px;border:1px solid var(--line);}
@@ -360,21 +333,22 @@ hr{border-color:var(--line)!important;}
 .pend-row{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--line2);}
 .pend-row:last-child{border-bottom:none;}
 
-.cs-active{border-color:var(--pri);background:#fff3e0;}
-.cat-stage-icon.cs-locked{filter:grayscale(1);opacity:.35;}
-
-.cat-stage-lbl.cs-cur{color:var(--pri2);}
-/* Level-up popup */
-
-
-
-
-
-
+/* ── Off surface ── */
+.off2{background:var(--bg2);}
+--bdr:var(--line);
+--navy:var(--ink);
+--amber:var(--gold2);
+--green:var(--blue2);
+--red:var(--rose);
+--gdk:var(--blue2);
+--glt:var(--bluel);
+--ydk:var(--gold2);
+--ylt:var(--goldl);
 </style>
 
 
 """
+
 
 # ══════════════════════════════════════════════════════════
 #  HELPERS
@@ -705,7 +679,7 @@ def render_login():
         st.markdown("""
         <div style="text-align:center;padding:20px 0 10px;">
           <span style="font-size:48px;">🐾</span>
-          <h1 style="font-size:28px;font-weight:700;color:var(--navy);margin:8px 0 4px;">PAWGRESS</h1>
+          <h1 style="font-size:28px;font-weight:700;color:var(--ink);margin:8px 0 4px;">PAWGRESS</h1>
           <p style="font-size:12px;color:var(--txt);">Performance Gamification Dashboard · Season April v2.4</p>
         </div>""", unsafe_allow_html=True)
 
@@ -787,23 +761,22 @@ with st.sidebar:
     st.markdown("""
     <div style="padding:14px 14px 11px;border-bottom:1px solid rgba(255,255,255,.07);">
       <div style="display:flex;align-items:center;gap:10px;">
-        <div style="width:30px;height:30px;background:linear-gradient(135deg,#F27127,#FFA502);
-          border-radius:8px;display:flex;align-items:center;justify-content:center;
-          font-size:14px;flex-shrink:0;">🐾</div>
+        <div style="width:28px;height:28px;background:#51a1c4;border-radius:8px;
+          display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">🐾</div>
         <div>
           <div style="font-size:13px;font-weight:700;color:#fff;letter-spacing:-.1px;line-height:1.1;">PAWGRESS</div>
-          <div style="font-size:9px;color:rgba(255,255,255,.25);margin-top:2px;
-            letter-spacing:.4px;text-transform:uppercase;">Season April</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.28);margin-top:2px;
+            letter-spacing:.5px;text-transform:uppercase;">Season April</div>
         </div>
       </div>
     </div>""", unsafe_allow_html=True)
 
     # ── User card ────────────────────────────────────────────
-    av_col  = STAFF_COLORS.get(USER, "#1a1200")
+    av_col  = STAFF_COLORS.get(USER, "var(--sb)")
     av_init = USER[:2].upper()
-    ai_colors = {"Pro":"#4ade80","Balanced":"#FFA502","Slow":"#FED330","Risky":"#f87171"}
+    ai_colors = {"Pro":"#4ade80","Balanced":"#51a1c4","Slow":"#ddb551","Risky":"#f87171"}
     if ROLE != "Manager":
-        ai_c = ai_colors.get(AI_TYPE, "#FFA502")
+        ai_c = ai_colors.get(AI_TYPE, "#51a1c4")
         st.markdown(f"""
         <div class="sb-user">
           <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
@@ -813,36 +786,36 @@ with st.sidebar:
               <div style="font-size:10px;color:rgba(255,255,255,.32);margin-top:1px;">{ROLE}</div>
             </div>
             <div style="text-align:right;flex-shrink:0;">
-              <div style="font-size:15px;font-weight:700;color:#FFA502;font-family:var(--mono);line-height:1;">{_get_lvl_idx(TOTAL_XP)}</div>
-              <div style="font-size:8px;color:rgba(255,255,255,.2);letter-spacing:.3px;">LV</div>
+              <div style="font-size:15px;font-weight:700;color:#51a1c4;font-family:var(--mono);line-height:1;">{_get_lvl_idx(TOTAL_XP)}</div>
+              <div style="font-size:8px;color:rgba(255,255,255,.22);letter-spacing:.3px;">LV</div>
             </div>
           </div>
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
             <span style="font-size:10px;color:rgba(255,255,255,.3);">{LVL_NAME}</span>
-            <span style="font-size:9px;font-weight:600;padding:1px 6px;border-radius:99px;
-              background:{ai_c}20;color:{ai_c};border:1px solid {ai_c}35;">⚡ {AI_TYPE}</span>
+            <span style="font-size:9px;font-weight:600;padding:1px 7px;border-radius:99px;
+              background:{ai_c}20;color:{ai_c};border:1px solid {ai_c}33;">⚡ {AI_TYPE}</span>
           </div>
           <div class="sb-xpb"><div class="sb-xpf" style="width:{LVL_PCT}%;"></div></div>
           <div style="display:flex;justify-content:space-between;font-size:10px;
             color:rgba(255,255,255,.2);font-family:var(--mono);margin-top:4px;">
             <span>{TOTAL_XP:,} xp</span>
-            <span style="color:#FED330;">🔥 {STREAK}d</span>
+            <span style="color:#ddb551;">🔥 {STREAK}d</span>
           </div>
         </div>""", unsafe_allow_html=True)
     else:
         st.markdown("""
-        <div style="margin:8px 8px 2px;background:rgba(255,165,2,.07);
-          border:1px solid rgba(255,165,2,.15);border-radius:11px;padding:10px 12px;">
+        <div style="margin:8px 8px 2px;background:rgba(81,161,196,.07);
+          border:1px solid rgba(81,161,196,.15);border-radius:11px;padding:10px 12px;">
           <div style="display:flex;align-items:center;gap:9px;">
-            <div style="width:30px;height:30px;border-radius:8px;background:rgba(255,165,2,.15);
+            <div style="width:30px;height:30px;border-radius:8px;background:rgba(81,161,196,.15);
               display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">👑</div>
             <div>
               <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,.9);">Manager</div>
               <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:1px;">Full Access · Admin</div>
             </div>
             <div style="margin-left:auto;font-size:9px;font-weight:700;padding:2px 7px;
-              border-radius:99px;background:rgba(255,165,2,.15);color:#FFA502;
-              border:1px solid rgba(255,165,2,.22);">ADMIN</div>
+              border-radius:99px;background:rgba(81,161,196,.15);color:#51a1c4;
+              border:1px solid rgba(81,161,196,.3);">ADMIN</div>
           </div>
         </div>""", unsafe_allow_html=True)
 
@@ -921,7 +894,7 @@ def page_my_tasks():
 
     st.markdown(f"""<div class="stat-row stat-row-4">
       <div class="stat-cell"><div class="stat-num" style="color:var(--green);">+{TODAY_XP}</div><div class="stat-lbl">XP hari ini</div><div class="stat-sub" style="color:var(--green);">{DONE_TODAY} task selesai</div></div>
-      <div class="stat-cell"><div class="stat-num" style="color:var(--amber);">{STREAK}</div><div class="stat-lbl">hari streak</div><div class="stat-sub" style="color:var(--amber);">+25 XP bonus</div></div>
+      <div class="stat-cell"><div class="stat-num" style="color:var(--gold2);">{STREAK}</div><div class="stat-lbl">hari streak</div><div class="stat-sub" style="color:var(--gold2);">+25 XP bonus</div></div>
       <div class="stat-cell"><div class="stat-num">{TOTAL_XP//100}</div><div class="stat-lbl">level · {LVL_NAME}</div></div>
       <div class="stat-cell"><div class="stat-num">{COIN_TOT}</div><div class="stat-lbl">coin</div></div>
     </div>""", unsafe_allow_html=True)
@@ -940,10 +913,10 @@ def page_my_tasks():
                 booking_code = st.text_input("Kode Booking (opsional)")
             notes    = st.text_area("Catatan (opsional)", height=60)
             cfg      = SLA_CONFIG.get(task_type,{})
-            st.markdown(f"""<div style="background:var(--off2);border:1.5px solid var(--bdr);border-radius:9px;padding:9px 13px;margin:4px 0 6px;">
-              <span style="font-size:12px;font-weight:600;color:#1a1200;">{task_type}</span>
+            st.markdown(f"""<div style="background:var(--bg2);border:1.5px solid var(--bdr);border-radius:9px;padding:9px 13px;margin:4px 0 6px;">
+              <span style="font-size:12px;font-weight:600;color:var(--ink);">{task_type}</span>
               <span style="font-size:10px;color:var(--txt);margin-left:10px;">SLA Ideal: <strong>{cfg.get('ideal','?')} mnt</strong> · Maks: <strong>{cfg.get('maks','?')} mnt</strong></span>
-              <span style="font-size:9px;font-weight:600;background:#fff4ec;color:#F27127;padding:2px 8px;border-radius:20px;margin-left:8px;">{cfg.get('cat','')}</span>
+              <span style="font-size:9px;font-weight:600;background:#edf6fa;color:#3a87ab;padding:2px 8px;border-radius:20px;margin-left:8px;">{cfg.get('cat','')}</span>
             </div>""", unsafe_allow_html=True)
             submitted = st.form_submit_button("✅ Submit Task", use_container_width=True)
 
@@ -1012,7 +985,7 @@ def page_my_tasks():
                                  (xplog_df["Timestamp"].astype(str).str.startswith(TODAY))].empty)
         _hstatus = "✓ Sudah tercatat — menunggu approval Manager" if _already else f"Kerjakan task hari ini → +{_hbonus_today['xp']} XP per task · Perlu approval Manager"
         st.markdown(f"""
-        <div style="background:#1a1200;border:1px solid {_hbonus_today['color']}44;border-radius:12px;
+        <div style="background:var(--sb);border:1px solid {_hbonus_today['color']}44;border-radius:12px;
           padding:13px 16px;margin-bottom:12px;display:flex;align-items:center;gap:14px;">
           <div style="width:42px;height:42px;border-radius:10px;background:{_hbonus_today['color']}20;
             display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🎁</div>
@@ -1123,11 +1096,11 @@ def page_my_tasks():
 
             with right_col:
                 # SLA box
-                st.markdown(f"""<div style="background:var(--off2);border:1.5px solid var(--bdr);border-radius:9px;padding:10px 13px;margin-bottom:10px;">
-                  <div style="font-size:11px;font-weight:600;color:var(--navy);margin-bottom:5px;">⏱ SLA</div>
+                st.markdown(f"""<div style="background:var(--bg2);border:1.5px solid var(--bdr);border-radius:9px;padding:10px 13px;margin-bottom:10px;">
+                  <div style="font-size:11px;font-weight:600;color:var(--ink);margin-bottom:5px;">⏱ SLA</div>
                   <div style="font-size:10px;color:var(--txt);">Ideal <strong>{cfg_r.get('ideal','?')}m</strong> · Maks <strong>{cfg_r.get('maks','?')}m</strong></div>
                   <div class="{sla_i['cls']}" style="margin-top:4px;">{sla_i['label']}</div>
-                  <div style="height:4px;background:var(--off2);border-radius:2px;overflow:hidden;margin-top:7px;">
+                  <div style="height:4px;background:var(--bg2);border-radius:2px;overflow:hidden;margin-top:7px;">
                     <div style="height:100%;width:{sla_i['pct']}%;background:{sla_i['color']};border-radius:2px;"></div>
                   </div></div>""", unsafe_allow_html=True)
 
@@ -1143,9 +1116,9 @@ def page_my_tasks():
                     st.markdown(f"""<div class="xp-panel">
                       <div style="font-size:9px;font-weight:600;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:9px;">XP Diterima ✓</div>
                       <div class="xp-row"><span class="xp-lbl">XP Masuk</span><span class="xp-val" style="color:var(--green);">+{xp_r}</span></div>
-                      <div class="xp-row"><span class="xp-lbl">Coin</span><span class="xp-val" style="color:#FFA502;">+{coin_r}</span></div>
+                      <div class="xp-row"><span class="xp-lbl">Coin</span><span class="xp-val" style="color:#51a1c4;">+{coin_r}</span></div>
                       <div class="xp-sep"></div>
-                      <div class="xp-line"><span style="font-size:12px;font-weight:600;color:#fff;">Total</span><span class="xp-total-n" style="color:#FFA502;">+{xp_r} XP</span></div>
+                      <div class="xp-line"><span style="font-size:12px;font-weight:600;color:#fff;">Total</span><span class="xp-total-n" style="color:#51a1c4;">+{xp_r} XP</span></div>
                     </div>""", unsafe_allow_html=True)
                 else:
                     sc = "var(--green)" if xp_e["speed"]>=0 else "#f87171"
@@ -1155,11 +1128,11 @@ def page_my_tasks():
                       <div class="xp-row"><span class="xp-lbl">Base XP</span><span class="xp-val" style="color:rgba(255,255,255,.7);">+{xp_e['base']}</span></div>
                       <div class="xp-row"><span class="xp-lbl">Speed Bonus</span><span class="xp-val" style="color:{sc};">{ss}{xp_e['speed']}</span></div>
                       <div class="xp-row"><span class="xp-lbl">Accuracy</span><span class="xp-val" style="color:var(--green);">+{xp_e['accuracy']}</span></div>
-                      <div class="xp-row"><span class="xp-lbl">Streak {STREAK}d</span><span class="xp-val" style="color:#FFA502;">+{xp_e['streak']}</span></div>
+                      <div class="xp-row"><span class="xp-lbl">Streak {STREAK}d</span><span class="xp-val" style="color:#51a1c4;">+{xp_e['streak']}</span></div>
                       <div class="xp-sep"></div>
                       <div class="xp-row" style="font-size:10px;"><span style="color:rgba(255,255,255,.3);">Multiplier ({AI_TYPE})</span><span style="color:rgba(255,255,255,.4);font-family:var(--mono);">{xp_e['mult']}×</span></div>
                       <div class="xp-sep"></div>
-                      <div class="xp-line"><span style="font-size:12px;font-weight:600;color:#fff;">Estimasi</span><span class="xp-total-n" style="color:#FFA502;">+{xp_e['total']} XP</span></div>
+                      <div class="xp-line"><span style="font-size:12px;font-weight:600;color:#fff;">Estimasi</span><span class="xp-total-n" style="color:#51a1c4;">+{xp_e['total']} XP</span></div>
                     </div>""", unsafe_allow_html=True)
 
 # ══════════════════════════════════════════════════════════
@@ -1180,7 +1153,7 @@ def page_qc_antrian():
     acc   = int(ok_n/tot_n*100) if tot_n>0 else 100
 
     st.markdown(f"""<div class="stat-row stat-row-3">
-      <div class="stat-cell"><div class="stat-num" style="color:var(--red);">{len(pending_qc)}</div><div class="stat-lbl">antrian QC</div></div>
+      <div class="stat-cell"><div class="stat-num" style="color:var(--rose);">{len(pending_qc)}</div><div class="stat-lbl">antrian QC</div></div>
       <div class="stat-cell"><div class="stat-num" style="color:var(--green);">{len(qc_mine)}</div><div class="stat-lbl">selesai hari ini</div><div class="stat-sub" style="color:var(--green);">+{len(qc_mine)*20} XP</div></div>
       <div class="stat-cell"><div class="stat-num">{acc}%</div><div class="stat-lbl">akurasi QC</div></div>
     </div>""", unsafe_allow_html=True)
@@ -1196,11 +1169,11 @@ def page_qc_antrian():
 
         with st.expander(f"🔍 {task_r} — {hotel_r or staff_r}  ·  {ref_r}"):
             hotel_part2 = f" — {hotel_r}" if hotel_r else ""
-            cross_badge  = '<span style="font-size:9px;font-weight:600;background:var(--glt);color:var(--gdk);padding:1px 7px;border-radius:4px;margin-left:6px;">Cross-role +5 Coin</span>' if cross else ""
+            cross_badge  = '<span style="font-size:9px;font-weight:600;background:var(--bluel);color:var(--blue2);padding:1px 7px;border-radius:4px;margin-left:6px;">Cross-role +5 Coin</span>' if cross else ""
             staff_role_lbl = STAFF_ROLE_MAP.get(staff_r, "")
             html_qc = (
                 f'<div class="row-card">'
-                f'<div style="font-size:12px;font-weight:600;color:#1a1200;">{task_r}{hotel_part2}</div>'
+                f'<div style="font-size:12px;font-weight:600;color:var(--ink);">{task_r}{hotel_part2}</div>'
                 f'<div style="font-size:10px;color:var(--txt);margin-top:3px;">{ref_r} · Oleh <strong>{staff_r}</strong> ({staff_role_lbl})'
                 f'{cross_badge}</div></div>'
             )
@@ -1242,18 +1215,18 @@ def page_status_qc():
         qc_s   = str(row.get("QC Status","Pending QC")); qc_by = str(row.get("QC By",""))
         task_r = str(row.get("Task Type","")); ref_r = str(row.get("Ref ID",""))
         xp_r   = _safe_int(row.get("XP",0)); hotel_r = str(row.get("Hotel",""))
-        fc,bc  = {"OK":("var(--gdk)","var(--glt)"),"Ada Isu":("var(--red)","var(--rlt)"),"Pending QC":("var(--ydk)","var(--ylt)")}.get(qc_s,("var(--txt)","var(--off2)"))
+        fc,bc  = {"OK":("var(--gdk)","var(--glt)"),"Ada Isu":("var(--red)","var(--rlt)"),"Pending QC":("var(--ydk)","var(--ylt)")}.get(qc_s,("var(--txt)","var(--bg2)"))
         hotel_part   = f" — {hotel_r}" if hotel_r else ""
         reviewer_part = f'<span style="margin-left:6px;">Reviewer: <strong>{qc_by}</strong></span>' if qc_by else ""
         html = (
             f'<div class="row-card">'
             f'<div style="display:flex;justify-content:space-between;align-items:center;">'
-            f'<div><div style="font-size:12px;font-weight:600;color:#1a1200;">{task_r}{hotel_part}</div>'
+            f'<div><div style="font-size:12px;font-weight:600;color:var(--ink);">{task_r}{hotel_part}</div>'
             f'<div style="font-size:10px;color:var(--txt);margin-top:2px;"><span class="mtag">{ref_r}</span>'
             f'{reviewer_part}</div></div>'
             f'<div style="text-align:right;">'
             f'<span style="font-size:9px;font-weight:700;padding:3px 9px;border-radius:20px;background:{bc};color:{fc};border:1px solid {fc}40;">{qc_s}</span>'
-            f'<div style="font-size:11px;font-weight:600;color:#F27127;font-family:var(--mono);margin-top:3px;">+{xp_r} XP</div>'
+            f'<div style="font-size:11px;font-weight:600;color:#3a87ab;font-family:var(--mono);margin-top:3px;">+{xp_r} XP</div>'
             f'</div></div></div>'
         )
         st.markdown(html, unsafe_allow_html=True)
@@ -1271,7 +1244,7 @@ def page_leaderboard():
       <div class="stat-cell"><div class="stat-num">{total_s}</div><div class="stat-lbl">total staff</div></div>
       <div class="stat-cell"><div class="stat-num">{top_xp:,}</div><div class="stat-lbl">top XP</div></div>
       <div class="stat-cell"><div class="stat-num">{xp_all:,}</div><div class="stat-lbl">XP terdistribusi</div></div>
-      <div class="stat-cell"><div class="stat-num" style="color:var(--red);">2×</div><div class="stat-lbl">event aktif</div></div>
+      <div class="stat-cell"><div class="stat-num" style="color:var(--rose);">2×</div><div class="stat-lbl">event aktif</div></div>
     </div>""", unsafe_allow_html=True)
 
     st.markdown("---")
@@ -1283,14 +1256,14 @@ def page_leaderboard():
     max_xp = int(lb["XP"].max()) if not lb.empty else 1
     for rank,(_, row) in enumerate(lb.iterrows(),1):
         sn=row["Staff"]; xv=int(row["XP"]); tv=int(row["Tasks"])
-        ac=STAFF_COLORS.get(sn,"#1a1200"); ai=sn[:2].upper()
+        ac=STAFF_COLORS.get(sn,"var(--sb)"); ai=sn[:2].upper()
         pct=int(xv/max_xp*100) if max_xp>0 else 0
         medal=medals[rank-1] if rank<=3 else f"#{rank}"
         stk=streak_days(task_df,sn); is_me=sn==USER
         # Build HTML as variable — avoids multiline f-string rendering issues
         border_style = "border:2px solid var(--navy);" if is_me else ""
-        streak_badge = f'<span style="font-size:9px;color:var(--ydk);font-weight:600;margin-left:5px;">🔥{stk}d</span>' if stk>=3 else ""
-        me_badge     = '<span style="font-size:9px;color:#F27127;font-weight:600;margin-left:4px;">— Saya</span>' if is_me else ""
+        streak_badge = f'<span style="font-size:9px;color:var(--gold2);font-weight:600;margin-left:5px;">🔥{stk}d</span>' if stk>=3 else ""
+        me_badge     = '<span style="font-size:9px;color:#3a87ab;font-weight:600;margin-left:4px;">— Saya</span>' if is_me else ""
         role_lbl     = STAFF_ROLE_MAP.get(sn,"")
         html = (
             f'<div class="card" style="{border_style}margin-bottom:7px;">'
@@ -1345,7 +1318,7 @@ def page_quest_streak():
 
     st.markdown(f"""
     <style>
-    .paw-path-wrap{{background:#fff;border:1px solid rgba(242,113,39,.12);border-radius:12px;
+    .paw-path-wrap{{background:#fff;border:1px solid rgba(81,161,196,.12);border-radius:12px;
       padding:16px;margin-bottom:12px;}}
     .paw-path-hd{{font-size:11px;font-weight:700;color:#b89060;text-transform:uppercase;
       letter-spacing:.8px;margin-bottom:14px;}}
@@ -1354,21 +1327,21 @@ def page_quest_streak():
       min-width:72px;position:relative;}}
     .paw-lv-node::after{{content:'';position:absolute;top:19px;left:50%;right:-50%;height:2px;z-index:0;}}
     .paw-lv-node:last-child::after{{display:none;}}
-    .pn-done::after{{background:#FFA502;}}
-    .pn-cur::after{{background:linear-gradient(90deg,#FFA502,rgba(242,113,39,.15));}}
-    .pn-lock::after{{background:rgba(242,113,39,.1);}}
+    .pn-done::after{{background:#51a1c4;}}
+    .pn-cur::after{{background:linear-gradient(90deg,#51a1c4,rgba(81,161,196,.15));}}
+    .pn-lock::after{{background:rgba(81,161,196,.1);}}
     .paw-lv-dot{{width:38px;height:38px;border-radius:99px;display:flex;align-items:center;
       justify-content:center;font-size:18px;border:2px solid transparent;z-index:1;}}
-    .pn-done .paw-lv-dot{{background:#fff3e0;border-color:#FFA502;}}
-    .pn-cur .paw-lv-dot{{background:#FFA502;border-color:#FED330;
-      box-shadow:0 0 0 4px rgba(255,165,2,.18);}}
-    .pn-lock .paw-lv-dot{{background:#fff8f0;border-color:rgba(242,113,39,.1);
+    .pn-done .paw-lv-dot{{background:#edf6fa;border-color:#51a1c4;}}
+    .pn-cur .paw-lv-dot{{background:#51a1c4;border-color:#ddb551;
+      box-shadow:0 0 0 4px rgba(81,161,196,.18);}}
+    .pn-lock .paw-lv-dot{{background:#f4f7f8;border-color:rgba(81,161,196,.1);
       filter:grayscale(1);opacity:.4;}}
     .paw-lv-nm{{font-size:9px;font-weight:600;color:#b89060;text-align:center;line-height:1.3;}}
-    .pn-cur .paw-lv-nm{{color:#F27127;font-weight:700;}}
+    .pn-cur .paw-lv-nm{{color:#3a87ab;font-weight:700;}}
     .pn-done .paw-lv-nm{{color:#2d8a4e;}}
     .paw-lv-xp{{font-size:9px;color:#b89060;font-family:'DM Mono',monospace;opacity:.7;}}
-    .pn-cur .paw-lv-xp{{color:#FFA502;opacity:1;}}
+    .pn-cur .paw-lv-xp{{color:#51a1c4;opacity:1;}}
     </style>
     <div class="paw-path-wrap">
       <div class="paw-path-hd">Jalur Evolusi</div>
@@ -1386,8 +1359,8 @@ def page_quest_streak():
     cm1, cm2, cm3 = st.columns(3)
     milestones = [
         (3,  "Hari Streak", "+10 XP", STREAK >= 3,  "#e8f8ee", "#2d8a4e", "rgba(45,138,78,.3)",  "&#10003; Selesai"),
-        (7,  "Hari Streak", "+25 XP", STREAK >= 7,  "#fff3e0", "#F27127", "rgba(255,165,2,.3)",   "&#10003; Aktif"),
-        (14, "Hari Streak", "+50 XP", STREAK >= 14, "#fafafa", "#b89060", "rgba(242,113,39,.1)",  f"{max(0,14-STREAK)} lagi"),
+        (7,  "Hari Streak", "+25 XP", STREAK >= 7,  "#edf6fa", "#3a87ab", "rgba(81,161,196,.3)",   "&#10003; Aktif"),
+        (14, "Hari Streak", "+50 XP", STREAK >= 14, "#fafafa", "#b89060", "rgba(81,161,196,.1)",  f"{max(0,14-STREAK)} lagi"),
     ]
     for col, (days, title, xpl, done, bg, clr, bdr, tag) in zip([cm1, cm2, cm3], milestones):
         with col:
@@ -1436,7 +1409,7 @@ def page_quest_streak():
             if not qc_df.empty and "QC By" in qc_df.columns else pd.DataFrame()
         )
         urg_d  = cnt(tt, "Task Type", "Booking Urgent")
-        html   = q_html("#fff4ec", "&#9989;",  "Input 5 Task",       f"{inp_d}/5 hari ini",  inp_d,  5, 50,  "#F27127")
+        html   = q_html("#edf6fa", "&#9989;",  "Input 5 Task",       f"{inp_d}/5 hari ini",  inp_d,  5, 50,  "#3a87ab")
         html  += q_html("var(--glt)", "&#127919;", "3 Task Done",    f"{done_d}/3 selesai",  done_d, 3, 40,  "var(--gdk)")
         html  += q_html("var(--rlt)", "&#128269;", "QC 3 Task",      f"{qcd}/3 QC hari ini", qcd,    3, 40,  "var(--red)")
         html  += q_html("var(--ylt)", "&#9889;",   "1 Booking Urgent",f"{urg_d}/1",           urg_d,  1, 60,  "var(--ydk)")
@@ -1449,7 +1422,7 @@ def page_quest_streak():
             qc_df[(qc_df["QC By"] == USER) & (qc_df["Date"] >= wc)]
             if not qc_df.empty and "QC By" in qc_df.columns else pd.DataFrame()
         )
-        html  = q_html("#fff4ec", "&#128203;", "Input 25 Task",   f"{inp_w}/25 minggu ini", inp_w,  25, 200, "#F27127")
+        html  = q_html("#edf6fa", "&#128203;", "Input 25 Task",   f"{inp_w}/25 minggu ini", inp_w,  25, 200, "#3a87ab")
         html += q_html("var(--glt)", "&#127919;", "15 Task Done", f"{done_w}/15",           done_w, 15, 150, "var(--gdk)")
         html += q_html("var(--rlt)", "&#128269;", "QC 10 Task",   f"{qcw}/10",              qcw,    10, 150, "var(--red)")
         st.markdown(f'<div class="card">{html}</div>', unsafe_allow_html=True)
@@ -1457,7 +1430,7 @@ def page_quest_streak():
     with tab_m:
         done_m = cnt(mt, "Status", "Done")
         inp_m  = cnt(mt)
-        html  = q_html("#fff4ec", "&#128203;", "Input 100 Task",  f"{inp_m}/100 bulan ini", inp_m,  100, 500, "#F27127")
+        html  = q_html("#edf6fa", "&#128203;", "Input 100 Task",  f"{inp_m}/100 bulan ini", inp_m,  100, 500, "#3a87ab")
         html += q_html("var(--glt)", "&#127919;", "60 Task Done", f"{done_m}/60",           done_m,  60, 400, "var(--gdk)")
         st.markdown(f'<div class="card">{html}</div>', unsafe_allow_html=True)
 
@@ -1470,8 +1443,8 @@ def page_dashboard():
     st.markdown(f"""<div class="stat-row stat-row-4">
       <div class="stat-cell"><div class="stat-num" style="color:var(--green);">{od}</div><div class="stat-lbl">staff aktif</div><div class="stat-sub">dari {len(ALL_STAFF['Booker'])+len(ALL_STAFF['Finance'])}</div></div>
       <div class="stat-cell"><div class="stat-num">{td}</div><div class="stat-lbl">task hari ini</div></div>
-      <div class="stat-cell"><div class="stat-num" style="color:var(--amber);">{xpn}</div><div class="stat-lbl">XP pending QC</div></div>
-      <div class="stat-cell"><div class="stat-num" style="color:var(--red);">{er}%</div><div class="stat-lbl">error rate</div></div>
+      <div class="stat-cell"><div class="stat-num" style="color:var(--gold2);">{xpn}</div><div class="stat-lbl">XP pending QC</div></div>
+      <div class="stat-cell"><div class="stat-num" style="color:var(--rose);">{er}%</div><div class="stat-lbl">error rate</div></div>
     </div>""", unsafe_allow_html=True)
 
     st.markdown("---")
@@ -1481,7 +1454,7 @@ def page_dashboard():
         if not session_df.empty and "Staff" in session_df.columns:
             for _,row in session_df[session_df["Date"]==TODAY].iterrows():
                 sn=str(row.get("Staff","")); is_on="active" in str(row.get("Status","Active")).lower()
-                av=STAFF_COLORS.get(sn,"#1a1200"); ai=sn[:2].upper()
+                av=STAFF_COLORS.get(sn,"var(--sb)"); ai=sn[:2].upper()
                 tn=len(task_df[(task_df["Staff"]==sn)&(task_df["Date"]==TODAY)]) if not task_df.empty else 0
                 dot_color  = "var(--gdk)" if is_on else "#c4ccd8"
                 sess_class = "sess-on" if is_on else "sess-off"
@@ -1490,9 +1463,9 @@ def page_dashboard():
                     f'<div class="row-card" style="margin-bottom:6px;">'
                     f'<div style="display:flex;align-items:center;gap:8px;">'
                     f'<div class="{"dot-on" if is_on else "dot-off"}"></div>'
-                    f'<div style="width:22px;height:22px;border-radius:50%;background:{av};display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;color:#fff;flex-shrink:0;">{ai}</div>'
-                    f'<span style="font-size:12px;font-weight:600;color:var(--navy);flex:1;">{sn}</span>'
-                    f'<span style="font-size:10px;color:#1a1200;">{tn} task</span>'
+                    f'<div style="width:22px;height:22px;border-radius:7px;background:{av};display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;color:#fff;flex-shrink:0;">{ai}</div>'
+                    f'<span style="font-size:12px;font-weight:600;color:var(--ink);flex:1;">{sn}</span>'
+                    f'<span style="font-size:10px;color:var(--ink);">{tn} task</span>'
                     f'<span class="{sess_class}">{sess_label}</span>'
                     f'</div></div>'
                 )
@@ -1503,9 +1476,9 @@ def page_dashboard():
         if not proj_df.empty:
             for _,row in proj_df.head(3).iterrows():
                 nm=str(row.get("Name","")); dl=str(row.get("Deadline","")); prog=_safe_int(row.get("Progress",0))
-                st.markdown(f"""<div class="row-card"><div style="font-size:12px;font-weight:600;color:#1a1200;">{nm}</div>
+                st.markdown(f"""<div class="row-card"><div style="font-size:12px;font-weight:600;color:var(--ink);">{nm}</div>
                 <div style="font-size:9px;color:var(--txt);">Deadline: {dl}</div>
-                <div class="pbar"><div class="pbar-fill" style="width:{prog}%;background:#F27127;"></div></div>
+                <div class="pbar"><div class="pbar-fill" style="width:{prog}%;background:#3a87ab;"></div></div>
                 <div style="font-size:9px;color:var(--txt);margin-top:2px;">{prog}%</div></div>""", unsafe_allow_html=True)
 
     with cr:
@@ -1513,11 +1486,11 @@ def page_dashboard():
         if not task_df.empty and "QC Status" in task_df.columns:
             for _,row in task_df[(task_df["Status"]=="Done")&(task_df["QC Status"]=="Pending QC")].head(5).iterrows():
                 sn=str(row.get("Staff","")); ref_r=str(row.get("Ref ID","")); xp_r=_safe_int(row.get("XP",0))
-                ac=STAFF_COLORS.get(sn,"#1a1200"); ai=sn[:2].upper()
+                ac=STAFF_COLORS.get(sn,"var(--sb)"); ai=sn[:2].upper()
                 st.markdown(f"""<div class="pend-row">
-                  <div style="width:22px;height:22px;border-radius:50%;background:{ac};display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;color:#fff;flex-shrink:0;">{ai}</div>
-                  <div style="flex:1;min-width:0;"><div style="font-size:11px;font-weight:600;color:#1a1200;">{sn}</div><div style="font-size:9px;color:var(--txt);">{ref_r}</div></div>
-                  <span style="font-size:11px;font-weight:600;color:#F27127;font-family:var(--mono);">+{xp_r}</span>
+                  <div style="width:22px;height:22px;border-radius:7px;background:{ac};display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;color:#fff;flex-shrink:0;">{ai}</div>
+                  <div style="flex:1;min-width:0;"><div style="font-size:11px;font-weight:600;color:var(--ink);">{sn}</div><div style="font-size:9px;color:var(--txt);">{ref_r}</div></div>
+                  <span style="font-size:11px;font-weight:600;color:#3a87ab;font-family:var(--mono);">+{xp_r}</span>
                 </div>""", unsafe_allow_html=True)
 
         st.markdown("#### 📊 Performa Tim Hari Ini")
@@ -1526,12 +1499,12 @@ def page_dashboard():
             mx = int(tp.max()) if not tp.empty else 1
             for sn,xpv in tp.head(8).items():
                 if sn=="Manager": continue
-                ac=STAFF_COLORS.get(sn,"#1a1200"); ai=sn[:2].upper(); pct=int(int(xpv)/mx*100) if mx>0 else 0
+                ac=STAFF_COLORS.get(sn,"var(--sb)"); ai=sn[:2].upper(); pct=int(int(xpv)/mx*100) if mx>0 else 0
                 st.markdown(f"""<div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;">
-                  <div style="width:20px;height:20px;border-radius:50%;background:{ac};display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:600;color:#fff;flex-shrink:0;">{ai}</div>
+                  <div style="width:20px;height:20px;border-radius:7px;background:{ac};display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:600;color:#fff;flex-shrink:0;">{ai}</div>
                   <div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;margin-bottom:2px;">
-                    <span style="font-size:11px;font-weight:600;color:#1a1200;">{sn}</span>
-                    <span style="font-size:10px;font-weight:600;color:#F27127;font-family:var(--mono);">+{int(xpv)}</span></div>
+                    <span style="font-size:11px;font-weight:600;color:var(--ink);">{sn}</span>
+                    <span style="font-size:10px;font-weight:600;color:#3a87ab;font-family:var(--mono);">+{int(xpv)}</span></div>
                     <div class="pbar"><div class="pbar-fill" style="width:{pct}%;background:{ac};"></div></div>
                   </div></div>""", unsafe_allow_html=True)
 
@@ -1546,7 +1519,7 @@ def page_session_monitor():
     tt=len(task_df[task_df["Date"]==TODAY]) if not task_df.empty and "Date" in task_df.columns else 0
     st.markdown(f"""<div class="stat-row stat-row-4">
       <div class="stat-cell"><div class="stat-num" style="color:var(--green);">{on_n}</div><div class="stat-lbl">login hari ini</div></div>
-      <div class="stat-cell"><div class="stat-num" style="color:var(--red);">{max(0,ts-on_n)}</div><div class="stat-lbl">belum login</div></div>
+      <div class="stat-cell"><div class="stat-num" style="color:var(--rose);">{max(0,ts-on_n)}</div><div class="stat-lbl">belum login</div></div>
       <div class="stat-cell"><div class="stat-num">{h}j {m}m</div><div class="stat-lbl">rata-rata durasi</div></div>
       <div class="stat-cell"><div class="stat-num">{tt}</div><div class="stat-lbl">total task</div></div>
     </div>""", unsafe_allow_html=True)
@@ -1561,9 +1534,9 @@ def page_session_monitor():
         sn=str(row.get("Staff","")); rn=str(row.get("Role",""))
         lt=str(row.get("Login Time",""))[:16]; dur=_safe_int(row.get("Duration Minutes",0))
         is_on="active" in str(row.get("Status","Active")).lower()
-        ac=STAFF_COLORS.get(sn,"#1a1200"); ai=sn[:2].upper()
+        ac=STAFF_COLORS.get(sn,"var(--sb)"); ai=sn[:2].upper()
         ai_t=classify_ai(task_df,sn)
-        ai_c={"Pro":"var(--gdk)","Balanced":"#F27127","Slow":"var(--ydk)","Risky":"var(--red)"}.get(ai_t,"#F27127")
+        ai_c={"Pro":"var(--gdk)","Balanced":"#3a87ab","Slow":"var(--ydk)","Risky":"var(--red)"}.get(ai_t,"#3a87ab")
         # FIX: row.get("Date", TODAY) → str(row.get("Date",""))
         row_date = str(row.get("Date","")) or TODAY
         tn=len(task_df[(task_df["Staff"]==sn)&(task_df["Date"]==row_date)]) if not task_df.empty else 0
@@ -1574,12 +1547,12 @@ def page_session_monitor():
             f'<div class="card" style="margin-bottom:7px;">'
             f'<div style="display:flex;align-items:center;gap:8px;">'
             f'<div class="{"dot-on" if is_on else "dot-off"}"></div>'
-            f'<div style="width:24px;height:24px;border-radius:50%;background:{ac};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#fff;flex-shrink:0;">{ai}</div>'
-            f'<span style="font-size:12px;font-weight:600;color:var(--navy);flex:1;">{sn}</span>'
+            f'<div style="width:24px;height:24px;border-radius:7px;background:{ac};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#fff;flex-shrink:0;">{ai}</div>'
+            f'<span style="font-size:12px;font-weight:600;color:var(--ink);flex:1;">{sn}</span>'
             f'<span style="font-size:9px;color:var(--txt);">{rn}</span>'
             f'<span style="font-size:10px;color:var(--txt);font-family:var(--mono);">{lt}</span>'
-            f'<span style="font-size:10px;font-weight:600;color:var(--navy);font-family:var(--mono);">{dur}m</span>'
-            f'<span style="font-size:11px;color:#1a1200;">{tn} task</span>'
+            f'<span style="font-size:10px;font-weight:600;color:var(--ink);font-family:var(--mono);">{dur}m</span>'
+            f'<span style="font-size:11px;color:var(--ink);">{tn} task</span>'
             f'<span style="font-size:9px;font-weight:600;color:{ai_c};">{ai_t}</span>'
             f'<span class="{sess_cls2}">{sess_lbl2}</span>'
             f'</div></div>'
@@ -1604,7 +1577,7 @@ def page_semua_task():
         sn=str(row.get("Staff","")); tr=str(row.get("Task Type",""))
         ref_r=str(row.get("Ref ID","")); sr=str(row.get("Status",""))
         xp_r=_safe_int(row.get("XP",0)); hr=str(row.get("Hotel",""))
-        ac=STAFF_COLORS.get(sn,"#1a1200"); ai=sn[:2].upper()
+        ac=STAFF_COLORS.get(sn,"var(--sb)"); ai=sn[:2].upper()
         with st.expander(f"{tr} — {hr or sn}  ·  {ref_r}  [{sr}]"):
             mc1,mc2=st.columns([3,1])
             with mc1:
@@ -1626,10 +1599,10 @@ def page_semua_task():
                         else: st.error(f"Gagal: {err}")
                     else: st.error("Ref ID tidak ditemukan.")
             with mc2:
-                st.markdown(f"""<div style="text-align:center;padding:12px;background:#1a1200;border-radius:10px;">
+                st.markdown(f"""<div style="text-align:center;padding:12px;background:var(--sb);border-radius:10px;">
                   <div style="font-size:9px;color:rgba(255,255,255,.4);margin-bottom:5px;">XP</div>
-                  <div style="font-size:22px;font-weight:700;color:#FFA502;font-family:var(--mono);">{xp_r:+}</div>
-                  <div style="width:24px;height:24px;border-radius:50%;background:{ac};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#fff;margin:8px auto 3px;">{ai}</div>
+                  <div style="font-size:22px;font-weight:700;color:#51a1c4;font-family:var(--mono);">{xp_r:+}</div>
+                  <div style="width:24px;height:24px;border-radius:7px;background:{ac};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#fff;margin:8px auto 3px;">{ai}</div>
                   <div style="font-size:11px;color:rgba(255,255,255,.7);">{sn}</div>
                 </div>""", unsafe_allow_html=True)
 
@@ -1640,11 +1613,11 @@ def page_xp_control():
     n_wa    = len(wa_list)
     n_app   = len(xplog_df[xplog_df["Applied By"]==USER]) if not xplog_df.empty and "Applied By" in xplog_df.columns else 0
     st.markdown(f"""<div class="stat-row stat-row-3">
-      <div class="stat-cell"><div class="stat-num" style="color:var(--red);">{n_task}</div>
+      <div class="stat-cell"><div class="stat-num" style="color:var(--rose);">{n_task}</div>
         <div class="stat-lbl">XP task pending</div></div>
-      <div class="stat-cell"><div class="stat-num" style="color:#F27127;">{n_wa}</div>
+      <div class="stat-cell"><div class="stat-num" style="color:#3a87ab;">{n_wa}</div>
         <div class="stat-lbl">allowance pending</div></div>
-      <div class="stat-cell"><div class="stat-num" style="color:var(--gdk);">{n_app}</div>
+      <div class="stat-cell"><div class="stat-num" style="color:var(--blue2);">{n_app}</div>
         <div class="stat-lbl">approved oleh kamu</div></div>
     </div>""", unsafe_allow_html=True)
 
@@ -1694,9 +1667,9 @@ def page_xp_control():
             for wi, wa in enumerate(wa_list):
                 sn_wa  = wa["staff"]; amt_wa = wa["amount"]
                 rsn_wa = wa["reason"]; ts_wa  = wa["ts"][:16]
-                av_c   = STAFF_COLORS.get(sn_wa,"#1a1200")
+                av_c   = STAFF_COLORS.get(sn_wa,"var(--sb)")
                 av_i   = sn_wa[:2].upper()
-                hcol   = "#dc2626" if "Merah" in rsn_wa else "#d97706" if "Minggu" in rsn_wa else "#F27127"
+                hcol   = "#dc2626" if "Merah" in rsn_wa else "#d97706" if "Minggu" in rsn_wa else "#3a87ab"
                 hlbl   = "Tanggal Merah" if "Merah" in rsn_wa else "Minggu" if "Minggu" in rsn_wa else "Sabtu"
                 st.markdown(
                     f'<div style="background:#fff;border:1.5px solid {hcol}33;border-radius:10px;'
@@ -1706,7 +1679,7 @@ def page_xp_control():
                     f'display:flex;align-items:center;justify-content:center;font-size:11px;'
                     f'font-weight:700;color:#fff;flex-shrink:0;">{av_i}</div>'
                     f'<div style="flex:1;min-width:0;">'
-                    f'<div style="font-size:13px;font-weight:600;color:#1a1200;">{sn_wa}</div>'
+                    f'<div style="font-size:13px;font-weight:600;color:var(--ink);">{sn_wa}</div>'
                     f'<div style="font-size:11px;color:#b89060;">{rsn_wa}</div></div>'
                     f'<div style="text-align:right;flex-shrink:0;">'
                     f'<div style="font-size:18px;font-weight:700;font-family:var(--mono);color:{hcol};">'
@@ -1753,20 +1726,20 @@ def page_xp_control():
             st.info("Belum ada aktivitas weekend minggu ini.")
         else:
             for sn_s, data_s in ws_sum.items():
-                av_c = STAFF_COLORS.get(sn_s,"#1a1200")
+                av_c = STAFF_COLORS.get(sn_s,"var(--sb)")
                 av_i = sn_s[:2].upper()
                 st.markdown(
-                    f'<div style="background:#fff;border:1px solid rgba(242,113,39,.12);'
+                    f'<div style="background:#fff;border:1px solid rgba(81,161,196,.12);'
                     f'border-radius:9px;padding:9px 12px;margin-bottom:5px;'
                     f'display:flex;align-items:center;gap:9px;">'
                     f'<div style="width:24px;height:24px;border-radius:7px;background:{av_c};'
                     f'display:flex;align-items:center;justify-content:center;font-size:9px;'
                     f'font-weight:700;color:#fff;flex-shrink:0;">{av_i}</div>'
                     f'<div style="flex:1;min-width:0;">'
-                    f'<div style="font-size:12px;font-weight:600;color:#1a1200;">{sn_s}</div>'
+                    f'<div style="font-size:12px;font-weight:600;color:var(--ink);">{sn_s}</div>'
                     f'<div style="font-size:10px;color:#b89060;">{data_s["tasks"]} task weekend</div></div>'
                     f'<div style="font-size:13px;font-weight:700;font-family:var(--mono);'
-                    f'color:#F27127;">+{data_s["bonus_xp"]} XP</div></div>',
+                    f'color:#3a87ab;">+{data_s["bonus_xp"]} XP</div></div>',
                     unsafe_allow_html=True)
 
         st.markdown("---")
@@ -1795,14 +1768,14 @@ def page_kelola_project():
                 nm=str(row.get("Name","")); dl=str(row.get("Deadline",""))
                 prog=_safe_int(row.get("Progress",0)); cat=str(row.get("Category",""))
                 sl=[s.strip() for s in str(row.get("Staff","")).split(",") if s.strip()]
-                pc="var(--gdk)" if prog>=80 else "#F27127" if prog>=50 else "var(--ydk)"
+                pc="var(--gdk)" if prog>=80 else "#3a87ab" if prog>=50 else "var(--ydk)"
                 st.markdown(f"""<div class="row-card">
                   <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
-                    <div><div style="font-size:12px;font-weight:600;color:#1a1200;">{nm}</div>
+                    <div><div style="font-size:12px;font-weight:600;color:var(--ink);">{nm}</div>
                     <div style="font-size:9px;color:var(--txt);">{cat} · Deadline {dl}</div></div>
-                    <span style="font-size:13px;font-weight:700;color:var(--ydk);font-family:var(--mono);">{prog}%</span></div>
+                    <span style="font-size:13px;font-weight:700;color:var(--gold2);font-family:var(--mono);">{prog}%</span></div>
                   <div style="display:flex;gap:3px;margin-bottom:5px;">
-                    {"".join([f'<div style="width:18px;height:18px;border-radius:50%;background:{STAFF_COLORS.get(s,"#1a1200")};display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:600;color:#fff;border:1.5px solid #fff;">{s[:2].upper()}</div>' for s in sl])}
+                    {"".join([f'<div style="width:18px;height:18px;border-radius:7px;background:{STAFF_COLORS.get(s,"var(--sb)")};display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:600;color:#fff;border:1.5px solid #fff;">{s[:2].upper()}</div>' for s in sl])}
                   </div>
                   <div class="pbar"><div class="pbar-fill" style="width:{prog}%;background:{pc};"></div></div>
                 </div>""", unsafe_allow_html=True)
@@ -1832,26 +1805,26 @@ def page_performa_tim():
     mx=int(perf["XP"].max()) if not perf.empty else 1
     for _,row in perf.iterrows():
         sn=row["Staff"]; xv=int(row["XP"]); dv=int(row["Done"]); tv=int(row["Total"]); dr=float(row["Done Rate"])
-        ac=STAFF_COLORS.get(sn,"#1a1200"); ai=sn[:2].upper()
+        ac=STAFF_COLORS.get(sn,"var(--sb)"); ai=sn[:2].upper()
         pct=int(xv/mx*100) if mx>0 else 0
         lvl_n,_,_,_,_=get_level(xv); stk=streak_days(task_df,sn)
         role_lbl = STAFF_ROLE_MAP.get(sn,"")
-        streak_badge = f'<span style="font-size:9px;color:var(--ydk);font-weight:600;margin-left:5px;">🔥{stk}d</span>' if stk>=3 else ""
+        streak_badge = f'<span style="font-size:9px;color:var(--gold2);font-weight:600;margin-left:5px;">🔥{stk}d</span>' if stk>=3 else ""
         html = (
             f'<div class="card" style="margin-bottom:8px;">'
             f'<div style="display:flex;align-items:center;gap:10px;">'
-            f'<div style="width:36px;height:36px;border-radius:50%;background:{ac};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;flex-shrink:0;">{ai}</div>'
+            f'<div style="width:36px;height:36px;border-radius:7px;background:{ac};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;flex-shrink:0;">{ai}</div>'
             f'<div style="flex:1;min-width:0;">'
             f'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">'
-            f'<span style="font-size:13px;font-weight:600;color:#1a1200;">{sn} '
+            f'<span style="font-size:13px;font-weight:600;color:var(--ink);">{sn} '
             f'<span style="font-size:9px;color:var(--txt);font-weight:400;">{role_lbl} · {lvl_n}</span>'
             f'{streak_badge}</span>'
-            f'<span style="font-size:13px;font-weight:700;color:#F27127;font-family:var(--mono);">{xv:,} XP</span>'
+            f'<span style="font-size:13px;font-weight:700;color:#3a87ab;font-family:var(--mono);">{xv:,} XP</span>'
             f'</div>'
             f'<div class="pbar"><div class="pbar-fill" style="width:{pct}%;background:{ac};"></div></div>'
             f'<div style="display:flex;gap:12px;margin-top:4px;font-size:10px;color:var(--txt);">'
             f'<span>{tv} task total</span><span>{dv} done</span>'
-            f'<span style="color:var(--gdk);font-weight:600;">{dr}% done rate</span>'
+            f'<span style="color:var(--blue2);font-weight:600;">{dr}% done rate</span>'
             f'</div></div></div></div>'
         )
         st.markdown(html, unsafe_allow_html=True)
@@ -1865,14 +1838,14 @@ def page_activity_log():
         sn=str(row.get("Staff","")); tr=str(row.get("Task Type",""))
         sr=str(row.get("Status","")); ts=str(row.get("Timestamp",""))[:16]
         ref_r=str(row.get("Ref ID","")); xp_r=_safe_int(row.get("XP",0))
-        ac=STAFF_COLORS.get(sn,"#1a1200"); ai=sn[:2].upper()
+        ac=STAFF_COLORS.get(sn,"var(--sb)"); ai=sn[:2].upper()
         st.markdown(f"""<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bdr2);">
-          <div style="width:22px;height:22px;border-radius:50%;background:{ac};display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;color:#fff;flex-shrink:0;">{ai}</div>
-          <span style="font-size:11px;font-weight:600;color:#1a1200;">{sn}</span>
+          <div style="width:22px;height:22px;border-radius:7px;background:{ac};display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;color:#fff;flex-shrink:0;">{ai}</div>
+          <span style="font-size:11px;font-weight:600;color:var(--ink);">{sn}</span>
           <span style="font-size:10px;color:var(--txt);">{tr}</span>
           <span class="mtag">{ref_r}</span>
           {status_html(sr)}
-          <span style="font-size:10px;font-weight:600;color:#F27127;font-family:var(--mono);">{xp_r:+}</span>
+          <span style="font-size:10px;font-weight:600;color:#3a87ab;font-family:var(--mono);">{xp_r:+}</span>
           <span style="font-size:9px;color:var(--txt);margin-left:auto;">{ts}</span>
         </div>""", unsafe_allow_html=True)
 
